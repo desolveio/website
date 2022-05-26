@@ -1,4 +1,4 @@
-import './App.css';
+import './routes/App.css';
 import {Link, Outlet} from "react-router-dom";
 
 function App() {
