@@ -8,7 +8,9 @@ import Home from "./routes/home";
 import Page1 from "./routes/page1";
 import Page2 from "./routes/page2";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(
+    document.getElementById('root') as HTMLElement
+);
 root.render(
     <BrowserRouter>
         <Routes>
