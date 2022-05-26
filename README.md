@@ -18,7 +18,7 @@ Creating the development environment:
 When running the development environment:
 - **NOTE:** In the development environment the backend will not serve the React content,
 - You'll be wanting to access the frontend by access it at https://localhost:3000.
-- If you specifically need to test the backend, you cna access it at https://localhost:8080
+- If you specifically need to test the backend, you can access it at https://localhost:8080
 
 ### Production
 To utilize a production build of this project simply do the following:
