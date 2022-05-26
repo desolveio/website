@@ -5,7 +5,7 @@ val logback_version: String by project
 plugins {
 	application
 	kotlin("jvm") version "1.6.21"
-	id("org.jetbrains.kotlin.plugin.serialization") version "1.6.21"
+	kotlin("plugin.serialization") version "1.6.21"
 }
 
 application {
@@ -25,9 +25,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 repositories {
 	mavenLocal()
 	mavenCentral()
-
-	// KTor 2.0 is currently EAP
-	maven { url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap") }
 }
 
 dependencies {
@@ -47,13 +44,13 @@ dependencies {
 	implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
 	// logging
 	implementation("ch.qos.logback:logback-classic:$logback_version")
-	
+
 	// KMongo
-	implementation("org.litote.kmongo:kmongo-coroutine-native:4.3.0")
+	implementation("org.litote.kmongo:kmongo-coroutine-native:4.5.1")
 
 	// tests
 	testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
-	testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+	testImplementation(kotlin("test-junit", kotlin_version))
 }
 
 tasks.register("processFrontendResources", Copy::class) {
