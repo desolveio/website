@@ -1,6 +1,7 @@
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
+val services_version: String by project
 
 plugins {
 	application
@@ -25,6 +26,15 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 repositories {
 	mavenLocal()
 	mavenCentral()
+
+	maven {
+		url = uri("${property("desolve_artifactory_contextUrl")}/gradle-release")
+
+		credentials {
+			username = property("desolve_artifactory_user") as String
+			password = property("desolve_artifactory_password") as String
+		}
+	}
 }
 
 dependencies {
@@ -44,6 +54,12 @@ dependencies {
 	implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
 	// logging
 	implementation("ch.qos.logback:logback-classic:$logback_version")
+
+	// Desolve Services
+	implementation("io.desolve.services:core:$services_version")
+	implementation("io.desolve.services:protocol-stub:$services_version")
+	implementation("io.desolve.services:distcache:$services_version")
+	implementation("io.desolve.services:profiles:$services_version")
 
 	// KMongo
 	implementation("org.litote.kmongo:kmongo-coroutine-native:4.5.1")
