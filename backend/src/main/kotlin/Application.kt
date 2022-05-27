@@ -40,7 +40,7 @@ private fun Application.configureRouting()
 	install(Locations)
 
 	install(StatusPages) {
-		status(HttpStatusCode.NotFound) { call, status ->
+		status(HttpStatusCode.NotFound) { call, _ ->
 			call.respondText { "404" }
 		}
 	}
