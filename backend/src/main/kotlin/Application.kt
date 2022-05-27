@@ -51,12 +51,15 @@ private fun Routing.configureSPA()
 	// if we are in development, we don't want to serve SPA
 	// with SPA enabled, we can't see 404s from the API with ease
 	// as it redirects to the SPA
+	val development = System
+		.getProperty("io.ktor.development")
+		.toBooleanStrictOrNull()
 
-	// TODO:
-	/*if (ENVIRONMENT == Environment.DEVELOPMENT)
+	if (development == null || development == true)
 	{
+		println("Skipping SPA configuration as a development environment has been detected ($development).")
 		return
-	}*/
+	}
 
 	// configure KTor to serve Vue content
 	singlePageApplication {
