@@ -53,11 +53,11 @@ private fun Routing.configureSPA()
 	// as it redirects to the SPA
 	val development = System
 		.getProperty("io.ktor.development")
-		.toBooleanStrictOrNull()
+		.toBooleanStrictOrNull() ?: false
 
-	if (development == null || development == true)
+	if (development)
 	{
-		println("Skipping SPA configuration as a development environment has been detected ($development).")
+		println("Skipping SPA configuration as a development environment has been detected.")
 		return
 	}
 
