@@ -11,6 +11,7 @@ import io.ktor.server.engine.*
 import io.ktor.server.http.content.*
 import io.ktor.server.locations.*
 import io.ktor.server.netty.*
+import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -69,6 +70,7 @@ fun ApplicationCall.userProfile() =
 private fun Application.configureRouting()
 {
 	install(Locations)
+	install(ContentNegotiation)
 
 	// TODO: 5/28/2022 logic for login & authenticated routing
 	//  https://github.com/AndreasVolkmann/ktor-auth-jwt-sample/blob/master/src/main/kotlin/me/avo/io/ktor/auth/jwt/sample/Module.kt
