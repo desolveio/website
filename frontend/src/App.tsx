@@ -3,7 +3,7 @@ import {Link, Outlet} from "react-router-dom";
 
 function App() {
     return (
-        <div>
+        <div className={"primary"}>
             <h1>Desolve</h1>
 
             <nav>

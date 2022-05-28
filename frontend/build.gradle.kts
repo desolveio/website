@@ -1,14 +1,12 @@
 plugins {
 	id("org.siouan.frontend-jdk11") version "6.0.0"
-	id("java")
+	java
 }
 
 buildscript {
 	repositories {
 		mavenCentral()
-		maven {
-			url = uri("https://plugins.gradle.org/m2/")
-		}
+		maven("https://plugins.gradle.org/m2/")
 	}
 }
 
