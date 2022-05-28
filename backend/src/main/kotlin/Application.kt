@@ -38,11 +38,11 @@ fun Application.routing()
 	}
 }
 
+private val profileService =
+	DesolveUserProfileService()
+
 fun Application.configureAuthentication()
 {
-	val profileService =
-		DesolveUserProfileService()
-
 	install(Authentication) {
 		jwt {
 			verifier(JwtConfig.verifier)
@@ -71,16 +71,17 @@ private fun Application.configureRouting()
 	install(Locations)
 
 	// TODO: 5/28/2022 logic for login & authenticated routing
+	//  https://github.com/AndreasVolkmann/ktor-auth-jwt-sample/blob/master/src/main/kotlin/me/avo/io/ktor/auth/jwt/sample/Module.kt
 	// post("login") {
 	//     val credentials = call.receive<UserPasswordCredential>()
-	//     val user = userSource.findUserByCredentials(credentials)
-	//     val token = JwtConfig.makeToken(user)
+	//     val user = profileService.findUserByCredentials(credentials)
+	//     val token = JwtConfig.createToken(user)
 	//     call.respondText(token)
 	// }
 
 	// authenticate(optional = true/false) {
 	//     get("optional") {
-	//         val user = call.user
+	//         val user = call.userProfile()
 	//         val response = if (user != null) "authenticated!" else "optional"
 	//         call.respond(response)
 	//     }
