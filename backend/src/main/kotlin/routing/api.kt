@@ -20,8 +20,6 @@ fun Application.configureApiRouting()
     routing {
         route("api")
         {
-            // TODO: 5/28/2022 logic for login & authenticated routing
-            //  https://github.com/AndreasVolkmann/ktor-auth-jwt-sample/blob/master/src/main/kotlin/me/avo/io/ktor/auth/jwt/sample/Module.kt
             post("login") {
                 val credentials = this.call
                     .receive<LoginRequest>()
@@ -47,6 +45,7 @@ fun Application.configureApiRouting()
                     return@post
                 }
 
+                // TODO: 5/29/2022 2FA on login?
                 val token = JwtConfig.createToken(user)
                 this.call.respondText(token)
             }
