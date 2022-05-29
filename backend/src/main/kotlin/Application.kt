@@ -1,21 +1,31 @@
 package io.desolve.website
 
-import io.desolve.services.profiles.DesolveUserProfile
 import io.desolve.services.profiles.DesolveUserProfileService
 import io.desolve.website.authentication.JwtConfig
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
-import io.ktor.server.engine.*
-import io.ktor.server.http.content.*
-import io.ktor.server.locations.*
-import io.ktor.server.netty.*
-import io.ktor.server.plugins.contentnegotiation.*
-import io.ktor.server.plugins.statuspages.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
-import java.util.*
+import io.desolve.website.extensions.userProfile
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.Application
+import io.ktor.server.application.call
+import io.ktor.server.application.install
+import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.jwt.jwt
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.http.content.react
+import io.ktor.server.http.content.singlePageApplication
+import io.ktor.server.locations.Locations
+import io.ktor.server.netty.Netty
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.statuspages.StatusPages
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.response.respondText
+import io.ktor.server.routing.Routing
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import io.ktor.server.routing.route
+import io.ktor.server.routing.routing
+import java.util.UUID
 
 fun main()
 {
@@ -25,7 +35,7 @@ fun main()
 		port = 8080,
 		watchPaths = listOf("classes", "resources")
 	) {
-		 routing()
+		routing()
 	}.start(wait = true)
 }
 
@@ -69,22 +79,38 @@ private fun Application.configureRouting()
 	install(Locations)
 	install(ContentNegotiation)
 
-	// TODO: 5/28/2022 logic for login & authenticated routing
-	//  https://github.com/AndreasVolkmann/ktor-auth-jwt-sample/blob/master/src/main/kotlin/me/avo/io/ktor/auth/jwt/sample/Module.kt
-	// post("login") {
-	//     val credentials = call.receive<UserPasswordCredential>()
-	//     val user = profileService.findUserByCredentials(credentials)
-	//     val token = JwtConfig.createToken(user)
-	//     call.respondText(token)
-	// }
+	routing {
+		// TODO: Relocate the contents of routing to their own files/packages, this is temporary for now
+		route("api")
+		{
+			@kotlinx.serialization.Serializable
+			class LoginRequest(val email: String, val password: String)
 
-	// authenticate(optional = true/false) {
-	//     get("optional") {
-	//         val user = call.userProfile()
-	//         val response = if (user != null) "authenticated!" else "optional"
-	//         call.respond(response)
-	//     }
-	// }
+			// TODO: 5/28/2022 logic for login & authenticated routing
+			//  https://github.com/AndreasVolkmann/ktor-auth-jwt-sample/blob/master/src/main/kotlin/me/avo/io/ktor/auth/jwt/sample/Module.kt
+			post("login") {
+				val credentials = call.receive<LoginRequest>()
+				val user = profileService.findByEmail(credentials.email)
+				if (user == null)
+				{
+					call.respondText { "invalid email" }
+					return@post
+				}
+				// todo: password check?
+				val token = JwtConfig.createToken(user)
+				call.respondText(token)
+			}
+
+			authenticate(optional = true) {
+				get("optional") {
+					val user = call.userProfile()
+					val response = if (user != null) "authenticated!" else "optional"
+					call.respond(response)
+				}
+			}
+		}
+	}
+
 
 	install(StatusPages) {
 		status(HttpStatusCode.NotFound) { call, _ ->
