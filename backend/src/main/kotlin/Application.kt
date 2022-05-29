@@ -16,10 +16,18 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.litote.kmongo.serialization.SerializationClassMappingTypeService
 import java.util.*
 
 fun main()
 {
+	//
+	System.setProperty(
+		"org.litote.mongo.mapping.service",
+		SerializationClassMappingTypeService::class
+			.qualifiedName!!
+	)
+
 	embeddedServer(
 		Netty,
 		host = "0.0.0.0",
@@ -40,8 +48,9 @@ fun Application.routing()
 	}
 }
 
-val profileService =
+val profileService by lazy {
 	DesolveUserProfileService()
+}
 
 fun Application.configureAuthentication()
 {
