@@ -59,7 +59,11 @@ dependencies {
 	implementation("io.desolve.services:core:$services_version")
 	implementation("io.desolve.services:protocol-stub:$services_version")
 	implementation("io.desolve.services:distcache:$services_version")
-	implementation("io.desolve.services:profiles:$services_version")
+	// TODO: 5/29/2022 build others services ^ keep ver same
+	implementation("io.desolve.services:profiles:1.0.0.1")
+
+	// Apache Commons
+	implementation("commons-codec:commons-codec:1.15")
 
 	// KMongo
 	implementation("org.litote.kmongo:kmongo-coroutine-native:4.5.1")
