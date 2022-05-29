@@ -64,9 +64,6 @@ fun Application.configureAuthentication()
 	}
 }
 
-fun ApplicationCall.userProfile() =
-	this.authentication.principal<DesolveUserProfile>()
-
 private fun Application.configureRouting()
 {
 	install(Locations)
