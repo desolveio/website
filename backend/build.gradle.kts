@@ -2,6 +2,7 @@ val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
 val services_version: String by project
+val services_profiles_version: String by project
 
 plugins {
 	application
@@ -59,7 +60,7 @@ dependencies {
 	implementation("io.desolve.services:core:$services_version")
 	implementation("io.desolve.services:protocol-stub:$services_version")
 	implementation("io.desolve.services:distcache:$services_version")
-	implementation("io.desolve.services:profiles:1.0.0.3")
+	implementation("io.desolve.services:profiles:$services_profiles_version")
 
 	// Apache Commons
 	implementation("commons-codec:commons-codec:1.15")
