@@ -1,14 +1,15 @@
 import React, {FormEventHandler, useState} from "react";
-import LoginAPI from "../../api/LoginAPI";
+import RegisterAPI from "../../api/RegisterAPI";
 
 export default function Register() {
     const [email, setEmail] = useState("")
+    const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
     const submit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
 
-        LoginAPI.submitLogin(email, password)
+        RegisterAPI.submitRegistration(email, username, password)
             .then(result => {
                 console.log(`login result = ${JSON.stringify(result)}`)
             }, error => {
@@ -21,32 +22,13 @@ export default function Register() {
             <label>Email:</label>
             <input type="text" value={email} onChange={e => setEmail(e.target.value)}/>
 
+            <label>Username:</label>
+            <input type="text" value={email} onChange={e => setUsername(e.target.value)}/>
+
             <label>Password:</label>
             <input type="password" value={password} onChange={e => setPassword(e.target.value)}/>
 
-            <input type="submit" value="Login"/>
+            <input type="submit" value="Register"/>
         </form>
     )
 }
-
-/*
-export default class Login extends React.Component
-    {
-
-        handleSubmit()
-        {
-
-        }
-
-        render()
-        {
-            return (
-                <div>
-                    <form onSubmit={this.handleSubmit}>
-
-                    </form>
-                </div>
-            )
-        }
-    }
-*/
