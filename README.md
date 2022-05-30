@@ -14,6 +14,7 @@ Creating the development environment:
   - Ensure under the scripts section you have `start` selected
 - Create a run configuration for Backend, with the Ktor type
   - Ensure under the vm args to add `-Dio.ktor.development=true`
+  - Ensure a MongoDB server is running locally under port `27017`
 
 When running the development environment:
 - **NOTE:** In the development environment the backend will not serve the React content,
