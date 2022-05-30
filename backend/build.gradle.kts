@@ -59,7 +59,7 @@ dependencies {
 	implementation("io.desolve.services:core:$services_version")
 	implementation("io.desolve.services:protocol-stub:$services_version")
 	implementation("io.desolve.services:distcache:$services_version")
-	implementation("io.desolve.services:profiles:$services_version")
+	implementation("io.desolve.services:profiles:1.0.0.3")
 
 	// Apache Commons
 	implementation("commons-codec:commons-codec:1.15")

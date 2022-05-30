@@ -21,7 +21,7 @@ import java.util.*
 
 fun main()
 {
-	//
+	// do not remove
 	System.setProperty(
 		"org.litote.mongo.mapping.service",
 		SerializationClassMappingTypeService::class
