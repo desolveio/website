@@ -1,5 +1,5 @@
 import React, {FormEventHandler, useState} from "react";
-import RegisterAPI from "../../api/RegisterAPI";
+import AuthenticationAPI from "../../api/AuthenticationAPI";
 
 export default function Register() {
     const [email, setEmail] = useState("")
@@ -9,9 +9,9 @@ export default function Register() {
     const submit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
 
-        RegisterAPI.submitRegistration(email, username, password)
+        AuthenticationAPI.submitRegistration(email, username, password)
             .then(result => {
-                console.log(`login result = ${JSON.stringify(result)}`)
+                console.log(`register result = ${JSON.stringify(result)}`)
             }, error => {
                 console.log(`error result = ${error}`)
             })

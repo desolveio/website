@@ -1,5 +1,5 @@
 import React, {FormEventHandler, useState} from "react";
-import LoginAPI from "../../api/LoginAPI";
+import AuthenticationAPI from "../../api/AuthenticationAPI";
 
 export default function Login() {
     const [email, setEmail] = useState("")
@@ -8,7 +8,7 @@ export default function Login() {
     const submit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
 
-        LoginAPI.submitLogin(email, password)
+        AuthenticationAPI.submitLogin(email, password)
             .then(result => {
                 console.log(`login result = ${JSON.stringify(result)}`)
             }, error => {
