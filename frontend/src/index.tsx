@@ -4,7 +4,6 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import Home from "./routes/home";
 import Page1 from "./routes/page1";
 import Page2 from "./routes/page2";
 import Login from "./routes/auth/login";
@@ -17,7 +16,6 @@ root.render(
     <BrowserRouter>
         <Routes>
             <Route path="/" element={<App/>}>
-                <Route path="home" element={<Home/>}/>
                 <Route path="page1" element={<Page1/>}/>
                 <Route path="page2" element={<Page2/>}/>
                 <Route path="login" element={<Login/>}/>
