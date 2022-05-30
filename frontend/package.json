@@ -25,6 +25,7 @@
     "eject": "react-scripts eject",
     "clean": "rm -rf build/dist"
   },
+  "proxy": "http://localhost:8080/",
   "eslintConfig": {
     "extends": [
       "react-app",
