@@ -5,6 +5,7 @@ import io.desolve.services.profiles.DesolveUserProfileToken
 import io.desolve.website.authentication.JwtConfig
 import io.desolve.website.authentication.login.LoginRequest
 import io.desolve.website.authentication.registration.RegistrationRequest
+import io.desolve.website.extensions.ensureUserProfile
 import io.desolve.website.extensions.userProfile
 import io.desolve.website.profileService
 import io.ktor.server.application.call
@@ -150,8 +151,15 @@ fun Route.routerAuth()
 			val refreshToken = DesolveUserProfileToken(UUID.randomUUID(), Instant.now().plus(5, ChronoUnit.MINUTES))
 			profileService.updateRefreshToken(user, refreshToken)
 
-
 			this.call.respond(LoginOrRefreshSuccessResponse(token, refreshToken))
+		}
+
+		authenticate {
+			get("logout") {
+				val profile = this.call.ensureUserProfile()
+				profileService.updateRefreshToken(profile, null)
+				call.respond(mapOf("success" to "Successfully logged out"))
+			}
 		}
 
 		authenticate(optional = true) {

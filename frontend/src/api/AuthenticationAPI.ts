@@ -11,6 +11,10 @@ class AuthenticationAPI {
         return axios.post('auth/register', {email: email, username: username, password: password})
     }
 
+    submitLogout(): Promise<AxiosResponse> {
+        return axios.get('auth/logout')
+    }
+
     testAuthentication(): Promise<AxiosResponse<String>> {
         return axios.get('auth/optional')
     }

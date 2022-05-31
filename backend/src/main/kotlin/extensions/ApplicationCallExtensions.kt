@@ -6,3 +6,6 @@ import io.ktor.server.auth.authentication
 
 fun ApplicationCall.userProfile() =
 	this.authentication.principal<DesolveUserProfile>()
+
+fun ApplicationCall.ensureUserProfile() =
+	userProfile()!!
