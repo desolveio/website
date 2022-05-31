@@ -10,7 +10,7 @@ export default function Login() {
 
         AuthenticationAPI.submitLogin(email, password)
             .then(result => {
-                console.log(`login result = ${JSON.stringify(result)}`)
+                console.log(`login result = ${result.data}`)
             }, error => {
                 console.log(`error result = ${error}`)
             })
@@ -29,25 +29,3 @@ export default function Login() {
         </form>
     )
 }
-
-/*
-export default class Login extends React.Component
-    {
-
-        handleSubmit()
-        {
-
-        }
-
-        render()
-        {
-            return (
-                <div>
-                    <form onSubmit={this.handleSubmit}>
-
-                    </form>
-                </div>
-            )
-        }
-    }
-*/

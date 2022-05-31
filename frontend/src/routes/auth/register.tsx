@@ -11,7 +11,7 @@ export default function Register() {
 
         AuthenticationAPI.submitRegistration(email, username, password)
             .then(result => {
-                console.log(`register result = ${JSON.stringify(result)}`)
+                console.log(`login result = ${JSON.stringify(result)}`)
             }, error => {
                 console.log(`error result = ${error}`)
             })

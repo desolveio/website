@@ -89,7 +89,6 @@ fun Application.configureApiRouting()
                         credentials.password
                     )
 
-                // TODO: 5/29/2022 SHA-256 pass on registration
                 if (user.password != sha256)
                 {
                     this.call.respondText("invalid password")
