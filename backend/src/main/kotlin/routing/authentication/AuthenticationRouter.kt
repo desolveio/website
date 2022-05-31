@@ -1,6 +1,7 @@
 package io.desolve.website.routing.authentication
 
 import io.desolve.services.profiles.DesolveUserProfile
+import io.desolve.services.profiles.DesolveUserProfileToken
 import io.desolve.website.authentication.JwtConfig
 import io.desolve.website.authentication.login.LoginRequest
 import io.desolve.website.authentication.registration.RegistrationRequest
@@ -12,11 +13,14 @@ import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.Route
-import io.ktor.server.routing.Routing
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 import org.apache.commons.codec.digest.DigestUtils
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.util.UUID
 
 fun Route.routerAuth()
@@ -98,7 +102,13 @@ fun Route.routerAuth()
 
 			// TODO: 5/29/2022 2FA on login?
 			val token = JwtConfig.createToken(user)
-			this.call.respondText(token)
+
+			val refreshToken = DesolveUserProfileToken(UUID.randomUUID(), Instant.now().plus(5, ChronoUnit.MINUTES))
+			profileService.updateRefreshToken(user, refreshToken)
+
+			@Serializable
+			data class SuccessResponse(val accessToken: String, @Contextual val refreshToken: DesolveUserProfileToken)
+			this.call.respond(SuccessResponse(token, refreshToken))
 		}
 
 		authenticate(optional = true) {
