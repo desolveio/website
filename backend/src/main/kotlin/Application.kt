@@ -2,7 +2,7 @@ package io.desolve.website
 
 import io.desolve.services.profiles.DesolveUserProfileService
 import io.desolve.website.authentication.JwtConfig
-import io.desolve.website.routing.configureApiRouting
+import io.desolve.website.routing.router
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -81,7 +81,7 @@ private fun Application.configureRouting()
 		json()
 	}
 
-	this.configureApiRouting()
+	this.router()
 
 	install(StatusPages) {
 		status(HttpStatusCode.NotFound) { call, _ ->
