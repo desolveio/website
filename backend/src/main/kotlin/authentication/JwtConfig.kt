@@ -17,7 +17,8 @@ object JwtConfig
     private const val issuer = "desolve.io"
 
     private val validity = Duration
-        .ofHours(12L).toMillis()
+        .ofSeconds(10L)
+        .toMillis()
 
     private val algorithm = Algorithm
         .HMAC512(this.secret)

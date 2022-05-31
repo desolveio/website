@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {applyAuthTokenInterceptor, IAuthTokens, TokenRefreshRequest} from "axios-jwt";
+import {applyAuthTokenInterceptor, clearAuthTokens, IAuthTokens, TokenRefreshRequest} from "axios-jwt";
 
 const BASE_URL = '/api/'
 
@@ -12,20 +12,21 @@ const axiosInstance = axios.create({
     }
 })
 
+// TODO: This runs on every web request, we might need to make it check the expiration time or something
 const requestRefresh: TokenRefreshRequest = async (refreshToken: string): Promise<IAuthTokens | string> => {
-
-    // Important! Do NOT use the axios instance that you supplied to applyAuthTokenInterceptor (in our case 'axiosInstance')
-    // because this will result in an infinite loop when trying to refresh the token.
-    // Use the global axios client or a different instance
     const response = await axios.post(`${BASE_URL}/auth/refresh_token`, {token: refreshToken})
 
-    // If your backend supports rotating refresh tokens, you may also choose to return an object containing both tokens:
-    // return {
-    //  accessToken: response.data.access_token,
-    //  refreshToken: response.data.refresh_token
-    //}
+    if (response.data.failure) {
+        console.log("Refresh token failed, logging out.")
+        clearAuthTokens()
+    } else {
+        console.log("Refreshed access token")
+    }
 
-    return response.data.access_token
+    return {
+        accessToken: response.data.accessToken,
+        refreshToken: response.data.refreshToken.token
+    }
 }
 
 applyAuthTokenInterceptor(axiosInstance, {

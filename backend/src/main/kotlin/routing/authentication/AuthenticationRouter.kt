@@ -76,6 +76,44 @@ fun Route.routerAuth()
 			this.call.respondText("Account created successfully")
 		}
 
+		suspend fun DesolveUserProfile.updateRefreshToken()
+		{
+			refreshToken = DesolveUserProfileToken(UUID.randomUUID(), Instant.now().plus(5, ChronoUnit.MINUTES))
+			profileService.updateRefreshToken(this, refreshToken)
+		}
+
+		@Serializable
+		data class LoginOrRefreshSuccessResponse(val accessToken: String, @Contextual val refreshToken: DesolveUserProfileToken)
+
+		post("refresh_token")
+		{
+			@Serializable
+			data class RefreshTokenRequest(@Contextual val token: UUID)
+
+			val request = call.receive<RefreshTokenRequest>()
+
+			val profile = profileService.findByAccessToken(request.token)
+			val refreshToken = profile?.refreshToken
+			if(refreshToken == null) {
+				call.respond(mapOf(
+					"failure" to "invalid refresh token"
+				))
+				return@post
+			}
+
+			if(Instant.now().isAfter(refreshToken.expiration)) {
+				call.respond(mapOf(
+					"failure" to "expired refresh token"
+				))
+				return@post
+			}
+
+			val token = JwtConfig.createToken(profile)
+			profile.updateRefreshToken()
+
+			call.respond(LoginOrRefreshSuccessResponse(token, profile.refreshToken!!))
+		}
+
 		post("login") {
 			val credentials = this.call
 				.receive<LoginRequest>()
@@ -106,9 +144,8 @@ fun Route.routerAuth()
 			val refreshToken = DesolveUserProfileToken(UUID.randomUUID(), Instant.now().plus(5, ChronoUnit.MINUTES))
 			profileService.updateRefreshToken(user, refreshToken)
 
-			@Serializable
-			data class SuccessResponse(val accessToken: String, @Contextual val refreshToken: DesolveUserProfileToken)
-			this.call.respond(SuccessResponse(token, refreshToken))
+
+			this.call.respond(LoginOrRefreshSuccessResponse(token, refreshToken))
 		}
 
 		authenticate(optional = true) {
