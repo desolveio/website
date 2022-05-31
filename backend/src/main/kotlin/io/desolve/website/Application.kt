@@ -112,7 +112,7 @@ private fun Routing.configureSPA()
 
 	// configure KTor to serve Vue content
 	singlePageApplication {
-		react("public")
+		react("static")
 		useResources = true
 	}
 }
