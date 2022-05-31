@@ -8,12 +8,15 @@ import Page1 from "./routes/page1";
 import Page2 from "./routes/page2";
 import Login from "./routes/auth/login";
 import Register from "./routes/auth/register";
+import {SetupAxios} from "./utils/AxiosUtil";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
+
 root.render(
     <BrowserRouter>
+        <SetupAxios/>
         <Routes>
             <Route path="/" element={<App/>}>
                 <Route path="page1" element={<Page1/>}/>
