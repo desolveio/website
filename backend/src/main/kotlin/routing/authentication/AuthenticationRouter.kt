@@ -8,6 +8,8 @@ import io.desolve.website.authentication.registration.RegistrationRequest
 import io.desolve.website.extensions.ensureUserProfile
 import io.desolve.website.extensions.userProfile
 import io.desolve.website.profileService
+import io.desolve.website.regex.emailRegex
+import io.desolve.website.regex.usernameRegex
 import io.ktor.server.application.call
 import io.ktor.server.auth.authenticate
 import io.ktor.server.request.receive
@@ -24,6 +26,7 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.UUID
 
+
 fun Route.routerAuth()
 {
 	route("auth")
@@ -39,6 +42,21 @@ fun Route.routerAuth()
 			if (user != null)
 			{
 				this.call.respondText("Already logged in")
+				return@post
+			}
+
+			if (!emailRegex.matches(registration.email))
+			{
+				this.call.respondText("Invalid email supplied")
+				return@post
+			}
+
+			if (
+				registration.username.length > 16 || // https://imgur.com/a/VLWpNHE
+				!usernameRegex.matches(registration.username)
+			)
+			{
+				this.call.respondText("Invalid email supplied")
 				return@post
 			}
 
