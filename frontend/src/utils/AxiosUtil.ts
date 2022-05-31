@@ -12,7 +12,6 @@ const axiosInstance = axios.create({
     }
 })
 
-// TODO: This runs on every web request, we might need to make it check the expiration time or something
 const requestRefresh: TokenRefreshRequest = async (refreshToken: string): Promise<IAuthTokens | string> => {
     const response = await axios.post(`${BASE_URL}/auth/refresh_token`, {token: refreshToken})
 
