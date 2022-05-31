@@ -12,6 +12,11 @@ export default function Login() {
             .then(result => {
                 console.log(`login result = ${result.data}`)
 
+                // todo: result data == JWT token
+                //  also look into refresh tokens?
+                //  https://github.com/jetbridge/axios-jwt?
+
+                // jwtToken = result.data.toString()
                 AuthenticationAPI.testAuthentication()
                     .then(test => {
                         console.log(`Test result = ${test.data}`)
