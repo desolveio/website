@@ -17,8 +17,10 @@ frontend {
 	assembleScript.set("run build")
 }
 
-tasks.named("jar", Jar::class) {
-	dependsOn("assembleFrontend")
-	from("$buildDir/dist")
-	into("static")
+tasks {
+	jar {
+		dependsOn("assembleFrontend")
+		from("$buildDir/dist")
+		into("static")
+	}
 }
