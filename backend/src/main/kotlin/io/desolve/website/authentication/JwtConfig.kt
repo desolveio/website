@@ -26,11 +26,11 @@ object JwtConfig
 		.toMillis()
 
 	private val algorithm = Algorithm
-		.HMAC512(this.secret)
+		.HMAC512(secret)
 
 	val verifier: JWTVerifier = JWT
-		.require(this.algorithm)
-		.withIssuer(this.issuer)
+		.require(algorithm)
+		.withIssuer(issuer)
 		.build()
 
 	fun createToken(
@@ -39,13 +39,13 @@ object JwtConfig
 	{
 		return JWT.create()
 			.withSubject("Authentication")
-			.withIssuer(this.issuer)
+			.withIssuer(issuer)
 			.withClaim("uniqueId", profile.uniqueId.toString())
-			.withExpiresAt(this.expiration())
-			.sign(this.algorithm)
+			.withExpiresAt(expiration())
+			.sign(algorithm)
 	}
 
 	private fun expiration() = Date(
-		System.currentTimeMillis() + this.validity
+		System.currentTimeMillis() + validity
 	)
 }
