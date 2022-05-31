@@ -2,13 +2,18 @@ package io.desolve.website.utils
 
 import com.github.jershell.kbson.BigDecimalSerializer
 import com.github.jershell.kbson.ByteArraySerializer
-import com.github.jershell.kbson.Configuration
 import com.github.jershell.kbson.DateSerializer
 import com.github.jershell.kbson.KBson
 import com.github.jershell.kbson.ObjectIdSerializer
-import com.github.jershell.kbson.UUIDSerializer
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.serializer
 import org.bson.BsonTimestamp
 import org.bson.types.Binary
 import org.bson.types.ObjectId
@@ -36,12 +41,27 @@ import java.util.Date
 import java.util.Locale
 import java.util.UUID
 
-private val Serializers = SerializersModule {
+val desolveJson = Json {
+	serializersModule = SerializersModule {
+		contextual(UUID::class, DesolveUUIDSerializer)
+		contextual(Instant::class, DesolveInstantSerializer)
+	}
+
+	// KTor Defaults
+	encodeDefaults = true
+	isLenient = true
+	allowSpecialFloatingPointValues = true
+	allowStructuredMapKeys = true
+	prettyPrint = false
+	useArrayPolymorphism = false
+}
+
+val kbson = KBson(serializersModule = SerializersModule {
 	contextual(ObjectId::class, ObjectIdSerializer)
 	contextual(BigDecimal::class, BigDecimalSerializer)
 	contextual(ByteArray::class, ByteArraySerializer)
 	contextual(Date::class, DateSerializer)
-	contextual(UUID::class, UUIDSerializer)
+	contextual(UUID::class, DesolveUUIDSerializer)
 	// KMongo
 	contextual(Calendar::class, CalendarSerializer)
 	//contextual(GregorianCalendar::class, CalendarSerializer)
@@ -55,13 +75,42 @@ private val Serializers = SerializersModule {
 	contextual(BsonTimestamp::class, BsonTimestampSerializer)
 	contextual(Locale::class, LocaleSerializer)
 	contextual(Binary::class, BinarySerializer)
-}
-
-val kbson = KBson(serializersModule = Serializers, configuration = Configuration(encodeDefaults = false))
+})
 
 inline fun <reified T> T.stringify(): String
 {
 	// this is very hacky but essentially KMongo-serialization uses KBson to convert, so we will use it as well :-)
-	return kbson.stringify(serializer(), this)
-		.toJson()
+	/*return kbson.stringify(serializer(), this)
+		.toJson()*/
+
+	return desolveJson.encodeToString(this)
+}
+
+object DesolveUUIDSerializer : KSerializer<UUID>
+{
+
+	override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DesolveUUIDSerializer", PrimitiveKind.STRING)
+
+	override fun deserialize(decoder: Decoder): UUID =
+		UUID.fromString(decoder.decodeString())
+
+	override fun serialize(encoder: Encoder, value: UUID)
+	{
+		encoder.encodeString(value.toString())
+	}
+
+}
+
+object DesolveInstantSerializer : KSerializer<Instant>
+{
+
+	override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("DesolveInstantSerializer", PrimitiveKind.STRING)
+
+	override fun deserialize(decoder: Decoder): Instant =
+		Instant.parse(decoder.decodeString())
+
+	override fun serialize(encoder: Encoder, value: Instant)
+	{
+		encoder.encodeString(value.toString())
+	}
 }
