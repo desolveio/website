@@ -3,6 +3,7 @@ package io.desolve.website
 import io.desolve.services.profiles.DesolveUserProfileService
 import io.desolve.website.authentication.JwtConfig
 import io.desolve.website.routing.router
+import io.desolve.website.utils.desolveJson
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -78,7 +79,9 @@ private fun Application.configureRouting()
 {
 	install(Locations)
 	install(ContentNegotiation) {
-		json()
+		json(
+			json = desolveJson
+		)
 	}
 
 	this.router()
