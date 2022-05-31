@@ -21,9 +21,13 @@ When running the development environment:
 - You'll be wanting to access the frontend by access it at https://localhost:3000.
 - If you specifically need to test the backend, you can access it at https://localhost:8080
 
+If you'd like to test a production build either follow these provided steps or see the Production section:
+- Simply run `gradle :final:run` or `gradle :final:runShadow`
+
 ### Production
 To utilize a production build of this project simply do the following:
-- In the root directory: `gradle build`
+- In the root directory: `gradle build` or `gradle :final:build`
+- Utilize the `DesolveWebsite.jar`
 
 This will create a fat-jar that includes everything needed to run the whole website. In a production environment, React is served via Ktor.
 

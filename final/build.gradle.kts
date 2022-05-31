@@ -17,7 +17,7 @@ dependencies {
 
 tasks {
 	withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
-		archiveBaseName.set("shadow")
+		archiveFileName.set("DesolveWebsite.jar")
 		mergeServiceFiles()
 	}
 
