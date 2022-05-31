@@ -8,5 +8,5 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class RegistrationRequest(
-    val email: String, val username: String, val password: String
+	val email: String, val username: String, val password: String
 )

@@ -11,33 +11,34 @@ import io.desolve.services.protocol.WorkerGrpcKt
  */
 object ClientService
 {
-    private val artifactChannel = DesolveClientConstants
-        .build(DesolveClientConstants.ARTIFACT_RESOLVER)
 
-    private val workerChannel = DesolveClientConstants
-        .build(DesolveClientConstants.WORKER_RESOLVER)
+	private val artifactChannel = DesolveClientConstants
+		.build(DesolveClientConstants.ARTIFACT_RESOLVER)
 
-    val artifactClient =
-        DesolveClientService(
-            this.artifactChannel,
-            StowageGrpcKt
-                .StowageCoroutineStub(
-                    this.artifactChannel
-                )
-        )
+	private val workerChannel = DesolveClientConstants
+		.build(DesolveClientConstants.WORKER_RESOLVER)
 
-    val workerClient =
-        DesolveClientService(
-            this.workerChannel,
-            WorkerGrpcKt
-                .WorkerCoroutineStub(
-                    this.workerChannel
-                )
-        )
+	val artifactClient =
+		DesolveClientService(
+			this.artifactChannel,
+			StowageGrpcKt
+				.StowageCoroutineStub(
+					this.artifactChannel
+				)
+		)
 
-    fun close()
-    {
-        this.artifactChannel.shutdownNow()
-        this.workerChannel.shutdownNow()
-    }
+	val workerClient =
+		DesolveClientService(
+			this.workerChannel,
+			WorkerGrpcKt
+				.WorkerCoroutineStub(
+					this.workerChannel
+				)
+		)
+
+	fun close()
+	{
+		this.artifactChannel.shutdownNow()
+		this.workerChannel.shutdownNow()
+	}
 }

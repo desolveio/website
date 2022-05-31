@@ -5,7 +5,7 @@ import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import io.desolve.services.profiles.DesolveUserProfile
 import java.time.Duration
-import java.util.*
+import java.util.Date
 
 /**
  * @author GrowlyX
@@ -13,34 +13,35 @@ import java.util.*
  */
 object JwtConfig
 {
-    private const val secret = "desolve-test"
-    private const val issuer = "desolve.io"
 
-    private val validity = Duration
-        .ofSeconds(10L)
-        .toMillis()
+	private const val secret = "desolve-test"
+	private const val issuer = "desolve.io"
 
-    private val algorithm = Algorithm
-        .HMAC512(this.secret)
+	private val validity = Duration
+		.ofSeconds(10L)
+		.toMillis()
 
-    val verifier: JWTVerifier = JWT
-        .require(this.algorithm)
-        .withIssuer(this.issuer)
-        .build()
+	private val algorithm = Algorithm
+		.HMAC512(this.secret)
 
-    fun createToken(
-        profile: DesolveUserProfile
-    ): String
-    {
-        return JWT.create()
-            .withSubject("Authentication")
-            .withIssuer(this.issuer)
-            .withClaim("uniqueId", profile.uniqueId.toString())
-            .withExpiresAt(this.expiration())
-            .sign(this.algorithm)
-    }
+	val verifier: JWTVerifier = JWT
+		.require(this.algorithm)
+		.withIssuer(this.issuer)
+		.build()
 
-    private fun expiration() = Date(
-        System.currentTimeMillis() + this.validity
-    )
+	fun createToken(
+		profile: DesolveUserProfile
+	): String
+	{
+		return JWT.create()
+			.withSubject("Authentication")
+			.withIssuer(this.issuer)
+			.withClaim("uniqueId", profile.uniqueId.toString())
+			.withExpiresAt(this.expiration())
+			.sign(this.algorithm)
+	}
+
+	private fun expiration() = Date(
+		System.currentTimeMillis() + this.validity
+	)
 }

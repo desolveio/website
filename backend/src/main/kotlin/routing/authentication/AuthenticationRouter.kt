@@ -94,17 +94,23 @@ fun Route.routerAuth()
 
 			val profile = profileService.findByAccessToken(request.token)
 			val refreshToken = profile?.refreshToken
-			if(refreshToken == null) {
-				call.respond(mapOf(
-					"failure" to "invalid refresh token"
-				))
+			if (refreshToken == null)
+			{
+				call.respond(
+					mapOf(
+						"failure" to "invalid refresh token"
+					)
+				)
 				return@post
 			}
 
-			if(Instant.now().isAfter(refreshToken.expiration)) {
-				call.respond(mapOf(
-					"failure" to "expired refresh token"
-				))
+			if (Instant.now().isAfter(refreshToken.expiration))
+			{
+				call.respond(
+					mapOf(
+						"failure" to "expired refresh token"
+					)
+				)
 				return@post
 			}
 
