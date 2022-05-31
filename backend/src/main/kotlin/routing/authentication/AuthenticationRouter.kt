@@ -81,7 +81,7 @@ fun Route.routerAuth()
 
 			if (user == null)
 			{
-				this.call.respondText("invalid email")
+				this.call.respond(mapOf("failure" to "invalid email"))
 				return@post
 			}
 
@@ -92,7 +92,7 @@ fun Route.routerAuth()
 
 			if (user.password != sha256)
 			{
-				this.call.respondText("invalid password")
+				this.call.respond(mapOf("failure" to "invalid password"))
 				return@post
 			}
 
