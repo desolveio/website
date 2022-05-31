@@ -11,6 +11,10 @@ class AuthenticationAPI {
         return axios.post('register', {email: email, username: username, password: password})
     }
 
+    testAuthentication(): Promise<AxiosResponse<String>> {
+        return axios.post('optional')
+    }
+
 }
 
 export default new AuthenticationAPI();

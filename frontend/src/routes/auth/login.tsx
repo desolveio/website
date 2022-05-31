@@ -11,6 +11,13 @@ export default function Login() {
         AuthenticationAPI.submitLogin(email, password)
             .then(result => {
                 console.log(`login result = ${result.data}`)
+
+                AuthenticationAPI.testAuthentication()
+                    .then(test => {
+                        console.log(`Test result = ${test.data}`)
+                    }, error => {
+                        console.log(`Test error = ${error}`)
+                    })
             }, error => {
                 console.log(`error result = ${error}`)
             })
