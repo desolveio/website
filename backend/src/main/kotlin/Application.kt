@@ -22,6 +22,8 @@ import io.ktor.server.routing.Routing
 import io.ktor.server.routing.routing
 import org.litote.kmongo.serialization.SerializationClassMappingTypeService
 import java.util.UUID
+import java.util.logging.Level
+import java.util.logging.Logger
 
 fun main()
 {
@@ -31,6 +33,9 @@ fun main()
 		SerializationClassMappingTypeService::class
 			.qualifiedName!!
 	)
+
+	// suppress mongodb logging like I want to suppress the headaches growly gives me
+	Logger.getLogger("org.mongodb.driver").level = Level.SEVERE
 
 	embeddedServer(
 		Netty,
