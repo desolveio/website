@@ -78,7 +78,7 @@ fun Route.routerAuth()
 
 		suspend fun DesolveUserProfile.updateRefreshToken()
 		{
-			refreshToken = DesolveUserProfileToken(UUID.randomUUID(), Instant.now().plus(5, ChronoUnit.MINUTES))
+			refreshToken = DesolveUserProfileToken(UUID.randomUUID(), Instant.now().plusMillis(JwtConfig.refreshTokenValidity))
 			profileService.updateRefreshToken(this, refreshToken)
 		}
 

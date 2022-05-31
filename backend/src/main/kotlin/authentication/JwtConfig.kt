@@ -18,7 +18,11 @@ object JwtConfig
 	private const val issuer = "desolve.io"
 
 	private val validity = Duration
-		.ofSeconds(10L)
+		.ofMinutes(15L)
+		.toMillis()
+
+	val refreshTokenValidity = Duration
+		.ofDays(7)
 		.toMillis()
 
 	private val algorithm = Algorithm
