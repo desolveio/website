@@ -30,10 +30,10 @@ function App() {
                 {isLoggedIn() ? (
                         <Link to="/" onClick={ handleLogout }>Logout</Link>
                 ) : (
-                    <div>
+                   <>
                         <Link to="/login">Login</Link> |{" "}
-                        <Link to="/register">Register</Link> |{" "}
-                    </div>
+                        <Link to="/register">Register</Link>
+                   </>
                 )}
 
 
