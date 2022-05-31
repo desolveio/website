@@ -25,20 +25,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 	}
 }
 
-repositories {
-	mavenLocal()
-	mavenCentral()
-
-	maven {
-		url = uri("${property("desolve_artifactory_contextUrl")}/gradle-release")
-
-		credentials {
-			username = property("desolve_artifactory_user") as String
-			password = property("desolve_artifactory_password") as String
-		}
-	}
-}
-
 dependencies {
 	// KTor Core
 	implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
@@ -72,22 +58,4 @@ dependencies {
 	// tests
 	testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
 	testImplementation(kotlin("test-junit", kotlin_version))
-}
-
-tasks.register("processFrontendResources", Copy::class) {
-	val frontend = project(":frontend")
-
-	val frontendBuildDir = file("${frontend.buildDir}/dist")
-	val frontendResourcesDir = file("${project.projectDir}/src/main/resources/public")
-
-	group = "Frontend"
-	description = "Process frontend resources"
-
-	dependsOn(frontend.tasks.named("assembleFrontend"))
-
-	from(frontendBuildDir).into(frontendResourcesDir)
-}
-
-tasks.withType<ProcessResources> {
-	dependsOn(tasks.named("processFrontendResources"))
 }
