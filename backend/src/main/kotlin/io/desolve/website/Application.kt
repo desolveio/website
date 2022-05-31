@@ -36,6 +36,8 @@ fun main()
 		watchPaths = listOf("classes", "resources")
 	) {
 		routing()
+
+		println("Started website on http://localhost:8080")
 	}.start(wait = true)
 }
 
