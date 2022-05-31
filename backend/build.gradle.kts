@@ -3,6 +3,7 @@ val kotlin_version: String by project
 val logback_version: String by project
 val services_version: String by project
 val services_profiles_version: String by project
+val kmongo_version: String by project
 
 plugins {
 	application
@@ -64,6 +65,9 @@ dependencies {
 
 	// Apache Commons
 	implementation("commons-codec:commons-codec:1.15")
+
+	// KMongo
+	implementation("org.litote.kmongo:kmongo-coroutine-serialization:$kmongo_version")
 
 	// tests
 	testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
