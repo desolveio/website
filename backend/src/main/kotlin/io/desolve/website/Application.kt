@@ -20,20 +20,12 @@ import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.routing
-import org.litote.kmongo.serialization.SerializationClassMappingTypeService
 import java.util.UUID
 import java.util.logging.Level
 import java.util.logging.Logger
 
 fun main()
 {
-	// do not remove
-	System.setProperty(
-		"org.litote.mongo.mapping.service",
-		SerializationClassMappingTypeService::class
-			.qualifiedName!!
-	)
-
 	// suppress mongodb logging like I want to suppress the headaches growly gives me
 	Logger.getLogger("org.mongodb.driver").level = Level.SEVERE
 
@@ -106,7 +98,6 @@ private fun Routing.configureSPA()
 	// if we are in development, we don't want to serve SPA
 	// with SPA enabled, we can't see 404s from the API with ease
 	// as it redirects to the SPA
-
 	val development = System
 		.getProperty("io.ktor.development")
 		?.toBoolean() ?: false
