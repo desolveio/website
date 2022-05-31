@@ -12,7 +12,7 @@ class AuthenticationAPI {
     }
 
     testAuthentication(): Promise<AxiosResponse<String>> {
-        return axios.post('optional')
+        return axios.get('optional')
     }
 
 }
