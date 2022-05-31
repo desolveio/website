@@ -3,11 +3,11 @@ import {AxiosResponse} from "axios"
 
 class AuthenticationAPI {
 
-    submitLogin(email: String, password: String): Promise<AxiosResponse<String>> {
+    submitLogin(email: String, password: String): Promise<AxiosResponse> {
         return axios.post('auth/login', {email: email, password: password})
     }
 
-    submitRegistration(email: String, username: String, password: String): Promise<AxiosResponse<String>> {
+    submitRegistration(email: String, username: String, password: String): Promise<AxiosResponse> {
         return axios.post('auth/register', {email: email, username: username, password: password})
     }
 
