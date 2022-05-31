@@ -7,8 +7,7 @@ const axiosInstance = axios.create({
     baseURL: BASE_URL,
     timeout: 1500,
     headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Content-Type': 'application/json'
     }
 })
 
