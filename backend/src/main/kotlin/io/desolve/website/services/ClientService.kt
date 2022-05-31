@@ -20,25 +20,25 @@ object ClientService
 
 	val artifactClient =
 		DesolveClientService(
-			this.artifactChannel,
+			artifactChannel,
 			StowageGrpcKt
 				.StowageCoroutineStub(
-					this.artifactChannel
+					artifactChannel
 				)
 		)
 
 	val workerClient =
 		DesolveClientService(
-			this.workerChannel,
+			workerChannel,
 			WorkerGrpcKt
 				.WorkerCoroutineStub(
-					this.workerChannel
+					workerChannel
 				)
 		)
 
 	fun close()
 	{
-		this.artifactChannel.shutdownNow()
-		this.workerChannel.shutdownNow()
+		artifactChannel.shutdownNow()
+		workerChannel.shutdownNow()
 	}
 }
