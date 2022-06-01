@@ -1,6 +1,6 @@
 package io.desolve.website
 
-import io.desolve.services.profiles.DesolveUserProfileService
+import io.desolve.services.profiles.DesolveUserProfilePlatformTools
 import io.desolve.website.authentication.JwtConfig
 import io.desolve.website.routing.router
 import io.desolve.website.utils.desolveJson
@@ -52,7 +52,7 @@ fun Application.routing()
 }
 
 val profileService by lazy {
-	DesolveUserProfileService()
+	DesolveUserProfilePlatformTools.service()
 }
 
 fun Application.configureAuthentication()
