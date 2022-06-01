@@ -89,7 +89,26 @@ private fun Application.configureRouting()
 
 	this.router()
 
+	val betterStatusCodes = System
+		.getProperty("io.desolve.website.status")
+		?.toBoolean() ?: false
+
 	install(StatusPages) {
+		if (betterStatusCodes)
+		{
+			val cat404 = URL("https://http.cat/404")
+				.readBytes()
+
+			status(HttpStatusCode.NotFound) { call, _ ->
+				call.respondBytes(
+					status = HttpStatusCode.NotFound,
+					bytes = cat404
+				)
+			}
+
+			return@install
+		}
+
 		status(HttpStatusCode.NotFound) { call, _ ->
 			call.respond(mapOf(
 				"description" to "404 Not Found"
