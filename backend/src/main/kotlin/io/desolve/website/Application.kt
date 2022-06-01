@@ -4,7 +4,7 @@ import io.desolve.services.profiles.DesolveUserProfilePlatformTools
 import io.desolve.website.authentication.JwtConfig
 import io.desolve.website.routing.router
 import io.desolve.website.utils.desolveJson
-import io.ktor.http.HttpStatusCode
+import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
@@ -17,9 +17,10 @@ import io.ktor.server.locations.Locations
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.statuspages.StatusPages
-import io.ktor.server.response.respondText
+import io.ktor.server.response.*
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.routing
+import java.net.URL
 import java.util.UUID
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -90,7 +91,15 @@ private fun Application.configureRouting()
 
 	install(StatusPages) {
 		status(HttpStatusCode.NotFound) { call, _ ->
-			call.respondText { "404" }
+			call.respond(mapOf(
+				"description" to "404 Not Found"
+			))
+		}
+
+		status(HttpStatusCode.Unauthorized) { call, _ ->
+			call.respond(mapOf(
+				"description" to "401 Unauthorized"
+			))
 		}
 	}
 }
