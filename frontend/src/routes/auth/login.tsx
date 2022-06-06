@@ -1,7 +1,7 @@
 import React, {FormEventHandler, useState} from "react";
 import AuthenticationAPI from "../../api/AuthenticationAPI";
-import {setAuthTokens} from "axios-jwt";
-import {useNavigate} from "react-router-dom";
+import {isLoggedIn, setAuthTokens} from "axios-jwt";
+import {useNavigate, Navigate} from "react-router-dom";
 
 export default function Login() {
     const [email, setEmail] = useState("")
@@ -32,8 +32,12 @@ export default function Login() {
             })
     }
 
+    if (isLoggedIn()) {
+        return <Navigate to="/"/>
+    }
+
     return (
-        <form onSubmit={submit}>
+        <form onSubmit={submit} autoComplete="on">
             <br></br>
             <label>Email: </label>
             <input type="text" value={email} onChange={e => setEmail(e.target.value)}/><br></br>

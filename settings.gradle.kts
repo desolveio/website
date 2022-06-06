@@ -1,4 +1,4 @@
-rootProject.name = "website"
+rootProject.name = "desolve-website"
 
 include(":frontend")
 include(":backend")
