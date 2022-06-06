@@ -1,8 +1,10 @@
 package io.desolve.website
 
+import io.desolve.services.distcache.DesolveDistcacheService
 import io.desolve.services.profiles.DesolveUserProfilePlatformTools
 import io.desolve.website.authentication.JwtConfig
 import io.desolve.website.routing.router
+import io.desolve.website.services.artifacts.DesolveArtifactContainer
 import io.desolve.website.utils.desolveJson
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.json
@@ -36,8 +38,12 @@ fun main()
 		port = 8080,
 		watchPaths = listOf("classes", "resources")
 	) {
-		routing()
+		DesolveDistcacheService
+			.container(
+				DesolveArtifactContainer()
+			)
 
+		routing()
 		println("Started website on http://localhost:8080")
 	}.start(wait = true)
 }
