@@ -1,8 +1,10 @@
 import AuthenticationAPI from "../api/AuthenticationAPI";
 import {useState} from "react";
+import ProfileAPI from "../api/ProfileAPI";
 
 export default function Page1() {
     const [status, setStatus] = useState("not called")
+    const [information, setInformation] = useState("not called")
 
     return (
         <div>
@@ -20,7 +22,24 @@ export default function Page1() {
                     })
             }}>Test Optional Auth</button>
 
+            <br></br>
+            <button onClick={ () => {
+                setInformation("loading...")
+
+                ProfileAPI.grabInformation()
+                    .then(test => {
+                        console.log(`Test result = ${
+                            JSON.stringify(test.data)
+                        }`)
+                        setInformation(JSON.stringify(test.data))
+                    }, error => {
+                        console.log(`Test error = ${error}`)
+                        setInformation(error.toString())
+                    })
+            }}>Grab User Information</button>
+
             <p>Status: {status}</p>
+            <p>Info: {information}</p>
         </div>
     )
 }

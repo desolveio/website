@@ -50,22 +50,20 @@ fun Route.routerArtifactsAuthenticated()
             .artifactClient.stub()
             .lookupArtifact(request)
 
-        when (response.result)
+        return@get when (response.result)
         {
             ArtifactLookupResult.NOT_FOUND -> {
                 call.respond(mapOf(
                     "description" to "seems like this artifacts lost woo"
                 ))
-                return@get
             }
             ArtifactLookupResult.UNRECOGNIZED -> {
                 call.respond(mapOf(
                     "description" to "did not recognize this artifact"
                 ))
-                return@get
             }
             ArtifactLookupResult.EXISTS -> {
-                return@get call.respond(mapOf(
+                call.respond(mapOf(
                     "description" to "found",
                     "location" to location,
                     "contentExists" to response
@@ -76,7 +74,6 @@ fun Route.routerArtifactsAuthenticated()
                 call.respond(mapOf(
                     "description" to "no result was returned"
                 ))
-                return@get
             }
         }
     }

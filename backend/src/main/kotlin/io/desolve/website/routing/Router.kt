@@ -13,10 +13,10 @@ fun Application.router()
 		route("api")
 		{
 			routerAuth()
-		}
 
-		authenticate {
-			routerAuthenticated()
+			authenticate {
+				routerAuthenticated()
+			}
 		}
 	}
 }

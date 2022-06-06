@@ -1,6 +1,7 @@
 package io.desolve.website.routing.authentication
 
 import io.desolve.website.routing.artifacts.routerArtifactsAuthenticated
+import io.desolve.website.routing.profile.routerProfileAuthenticated
 import io.ktor.server.routing.*
 
 /**
@@ -12,5 +13,10 @@ fun Route.routerAuthenticated()
     route("artifacts")
     {
         routerArtifactsAuthenticated()
+    }
+
+    route("user")
+    {
+        routerProfileAuthenticated()
     }
 }
