@@ -3,11 +3,18 @@ package io.desolve.website.routing.artifacts
 import io.desolve.services.distcache.DesolveDistcacheService
 import io.desolve.services.protocol.ArtifactLookupRequest
 import io.desolve.services.protocol.ArtifactLookupResult
+import io.desolve.services.protocol.BuildTool
+import io.desolve.services.protocol.GitSpecification
+import io.desolve.services.protocol.WorkerRequest
 import io.desolve.website.services.ClientService
 import io.desolve.website.services.artifacts.DesolveArtifactContainer
+import io.ktor.client.request.*
+import kotlinx.serialization.Serializable
 import io.ktor.server.application.*
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import java.util.*
 
 /**
  * @author GrowlyX
@@ -15,6 +22,37 @@ import io.ktor.server.routing.*
  */
 fun Route.routerArtifacts()
 {
+    @Serializable
+    class ArtifactCreate(val repository: String, val dependency: String)
+
+    post("createArtifact")
+    {
+        val creation = this.call
+            .receive<ArtifactCreate>()
+
+        val split = creation.dependency
+            .split(":")
+
+        val request = WorkerRequest.newBuilder()
+            .setArtifactUniqueId(
+                UUID.randomUUID().toString()
+            )
+            // TODO: 6/7/2022 detect lol
+            .setBuildTool(BuildTool.GRADLE)
+            .setSpecification(
+                GitSpecification.newBuilder()
+                    .setRepositoryUrl(creation.repository)
+                    .build()
+            )
+            .setTimestamp(
+                System.currentTimeMillis().toString()
+            )
+            .build()
+
+        ClientService.workerClient.stub()
+            .startTaskWork(request)
+    }
+
     get("basicLookup/{artifactId}")
     {
         val artifactId = call
