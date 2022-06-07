@@ -2,9 +2,11 @@ import './routes/App.css';
 import {Link, Outlet, useNavigate} from "react-router-dom";
 import {clearAuthTokens, isLoggedIn} from "axios-jwt";
 import AuthenticationAPI from "./api/AuthenticationAPI";
+import {useState} from "react";
 
 function App() {
     const navigate = useNavigate();
+    const [username, setUsername] = useState("")
 
     const handleLogout = () => {
         const logout = () => {
@@ -36,11 +38,16 @@ function App() {
                    </>
                 )}
 
+                <br></br><br></br>
 
+                <input type="text" placeholder="Type a username..." onChange={
+                    event => setUsername(event.target.value)
+                }></input>{" "}
 
-
+                <button onClick={ () => {
+                    navigate('users/' + username)
+                }}>Search</button>
             </nav>
-
             <Outlet/>
         </div>
     );

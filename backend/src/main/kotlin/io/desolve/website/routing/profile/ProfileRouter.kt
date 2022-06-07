@@ -12,21 +12,49 @@ import io.ktor.server.routing.*
  */
 fun Route.routerProfileAuthenticated()
 {
-    get("information")
+    route("information")
     {
-        val profile = this.call.ensureUserProfile()
-        call.respond(profile)
+        get("")
+        {
+            val profile = this.call.ensureUserProfile()
+            call.respond(profile)
+        }
+
+        get("sync")
+        {
+            val profile = this.call
+                .ensureUserProfile()
+                .uniqueId
+
+            call.respond(
+                DesolveUserProfilePlatformTools
+                    .service().findByUniqueId(profile)!!
+            )
+        }
     }
+}
 
-    get("informationGrabLatest")
+fun Route.routerProfile()
+{
+    route("information")
     {
-        val profile = this.call
-            .ensureUserProfile()
-            .uniqueId
+        get("view/{username}")
+        {
+            val username = call
+                .parameters["username"]
+                ?: return@get call.respond(mapOf(
+                    "description" to "no username provided"
+                ))
 
-        call.respond(
-            DesolveUserProfilePlatformTools
-                .service().findByUniqueId(profile)!!
-        )
+            // TODO: 6/6/2022 case different usernames
+            //  won't be matched with KMongo using eq
+            val profile = DesolveUserProfilePlatformTools
+                .service().findByUsername(username)
+                ?: return@get call.respond(mapOf(
+                    "description" to "no account found"
+                ))
+
+            call.respond(profile)
+        }
     }
 }

@@ -116,7 +116,7 @@ fun Route.routerAuth()
 			{
 				call.respond(
 					mapOf(
-						"failure" to "invalid refresh token"
+						"description" to "invalid refresh token"
 					)
 				)
 				return@post
@@ -126,7 +126,7 @@ fun Route.routerAuth()
 			{
 				call.respond(
 					mapOf(
-						"failure" to "expired refresh token"
+						"description" to "expired refresh token"
 					)
 				)
 				return@post
@@ -147,7 +147,7 @@ fun Route.routerAuth()
 
 			if (user == null)
 			{
-				this.call.respond(mapOf("failure" to "invalid email"))
+				this.call.respond(mapOf("description" to "invalid email"))
 				return@post
 			}
 
@@ -158,7 +158,7 @@ fun Route.routerAuth()
 
 			if (user.password != sha256)
 			{
-				this.call.respond(mapOf("failure" to "invalid password"))
+				this.call.respond(mapOf("description" to "invalid password"))
 				return@post
 			}
 

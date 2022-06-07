@@ -9,6 +9,7 @@ import Page2 from "./routes/page2";
 import Login from "./routes/auth/login";
 import Register from "./routes/auth/register";
 import {SetupAxios} from "./utils/AxiosUtil";
+import UserView from "./routes/profile/userView";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -23,6 +24,7 @@ root.render(
                 <Route path="page2" element={<Page2/>}/>
                 <Route path="login" element={<Login/>}/>
                 <Route path="register" element={<Register/>}/>
+                <Route path="users/:username" element={<UserView/>}/>
             </Route>
         </Routes>
 
