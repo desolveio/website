@@ -116,7 +116,7 @@ fun Route.routerAuth()
 			{
 				call.respond(
 					mapOf(
-						"description" to "invalid refresh token"
+						"failure" to "invalid refresh token"
 					)
 				)
 				return@post
@@ -126,7 +126,7 @@ fun Route.routerAuth()
 			{
 				call.respond(
 					mapOf(
-						"description" to "expired refresh token"
+						"failure" to "expired refresh token"
 					)
 				)
 				return@post
@@ -165,7 +165,7 @@ fun Route.routerAuth()
 			// TODO: 5/29/2022 2FA on login?
 			val token = JwtConfig.createToken(user)
 
-			val refreshToken = DesolveUserProfileToken(UUID.randomUUID(), Instant.now().plus(5, ChronoUnit.MINUTES))
+			val refreshToken = DesolveUserProfileToken(UUID.randomUUID(), Instant.now().plus(7, ChronoUnit.DAYS))
 			profileService.updateRefreshToken(user, refreshToken)
 
 			this.call.respond(LoginOrRefreshSuccessResponse(token, refreshToken))
