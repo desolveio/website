@@ -4,6 +4,7 @@ import io.desolve.services.distcache.DesolveDistcacheService
 import io.desolve.services.profiles.DesolveUserProfilePlatformTools
 import io.desolve.website.authentication.JwtConfig
 import io.desolve.website.routing.router
+import io.desolve.website.services.ClientService
 import io.desolve.website.services.artifacts.DesolveArtifactContainer
 import io.desolve.website.utils.desolveJson
 import io.ktor.http.*
@@ -45,6 +46,12 @@ fun main()
 
 		routing()
 		println("Started website on http://localhost:8080")
+
+		Runtime.getRuntime().addShutdownHook(Thread {
+			println("Shutting down client services...")
+
+			ClientService.close()
+		})
 	}.start(wait = true)
 }
 

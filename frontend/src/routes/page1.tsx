@@ -1,9 +1,11 @@
 import AuthenticationAPI from "../api/AuthenticationAPI";
 import {useState} from "react";
 import ProfileAPI from "../api/ProfileAPI";
+import ArtifactsAPI from "../api/ArtifactsAPI";
 
 export default function Page1() {
     const [status, setStatus] = useState("not called")
+    const [artifactStatus, setArtifactStatus] = useState("not called")
     const [information, setInformation] = useState("not called")
 
     return (
@@ -22,6 +24,16 @@ export default function Page1() {
                     })
             }}>Test Optional Auth</button>
 
+            <button onClick={ () => {
+                // !! testing !!
+                ArtifactsAPI.createArtifact(
+                    `https://github.com/patrickzondervan/scoreboards`,
+                    `io.github.patrickzondervan`, 'scoreboards', `1.0.0`
+                ).then(result => {
+                    setArtifactStatus(result.data.toString())
+                })
+            }}>Test Worker & Artifact Servers</button>
+
             <br></br>
             <button onClick={ () => {
                 setInformation("loading...")
@@ -39,6 +51,7 @@ export default function Page1() {
             }}>Grab User Information</button>
 
             <p>Status: {status}</p>
+            <p>Status for Artifacts: {artifactStatus}</p>
             <p>Info: {information}</p>
         </div>
     )

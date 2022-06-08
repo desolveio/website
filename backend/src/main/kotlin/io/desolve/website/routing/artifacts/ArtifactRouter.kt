@@ -37,7 +37,7 @@ fun Route.routerArtifacts()
             .setSpecification(
                 DependencyLocation.newBuilder()
                     .setRepositoryUrl(creation.repository)
-                    .setGroupId(split[1])
+                    .setGroupId(split[0])
                     .setArtifactId(split[1])
                     .setVersion(split[2])
                     .build()
