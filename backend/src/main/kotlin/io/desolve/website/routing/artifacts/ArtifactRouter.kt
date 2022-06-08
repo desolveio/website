@@ -1,19 +1,14 @@
 package io.desolve.website.routing.artifacts
 
 import io.desolve.services.distcache.DesolveDistcacheService
-import io.desolve.services.protocol.ArtifactLookupRequest
-import io.desolve.services.protocol.ArtifactLookupResult
-import io.desolve.services.protocol.BuildTool
-import io.desolve.services.protocol.GitSpecification
-import io.desolve.services.protocol.WorkerRequest
+import io.desolve.services.protocol.*
 import io.desolve.website.services.ClientService
 import io.desolve.website.services.artifacts.DesolveArtifactContainer
-import io.ktor.client.request.*
-import kotlinx.serialization.Serializable
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.serialization.Serializable
 import java.util.*
 
 /**
@@ -33,15 +28,18 @@ fun Route.routerArtifacts()
         val split = creation.dependency
             .split(":")
 
+        val uniqueId = UUID.randomUUID().toString()
+
         val request = WorkerRequest.newBuilder()
-            .setArtifactUniqueId(
-                UUID.randomUUID().toString()
-            )
+            .setArtifactUniqueId(uniqueId)
             // TODO: 6/7/2022 detect lol
             .setBuildTool(BuildTool.GRADLE)
             .setSpecification(
-                GitSpecification.newBuilder()
+                DependencyLocation.newBuilder()
                     .setRepositoryUrl(creation.repository)
+                    .setGroupId(split[1])
+                    .setArtifactId(split[1])
+                    .setVersion(split[2])
                     .build()
             )
             .setTimestamp(
