@@ -30,8 +30,7 @@ export default function Page1() {
                     <button onClick={() => {
                         // !! testing !!
                         ArtifactsAPI.createArtifact(
-                            `https://github.com/GrowlyX/ab`,
-                            `io.github.growlyx`, 'ab2', `1.0.0`
+                            `https://github.com/GrowlyX/ab`
                         ).then(result => {
                             setArtifactStatus(result.data.toString());
                         });
