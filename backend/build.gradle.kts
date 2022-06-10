@@ -1,14 +1,17 @@
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
+
 val services_version: String by project
 val services_profiles_version: String by project
+val services_containers_version: String by project
+
 val kmongo_version: String by project
 
 plugins {
 	application
-	kotlin("jvm") version "1.6.21"
-	kotlin("plugin.serialization") version "1.6.21"
+	kotlin("jvm") version "1.7.0"
+	kotlin("plugin.serialization") version "1.7.0"
 }
 
 application {
@@ -45,6 +48,7 @@ dependencies {
 
 	// Desolve Services
 	implementation("io.desolve.services:core:$services_version")
+	implementation("io.desolve.services:containers:$services_containers_version")
 	implementation("io.desolve.services:protocol-stub:$services_version")
 	implementation("io.desolve.services:distcache:$services_version")
 	implementation("io.desolve.services:profiles:$services_profiles_version")

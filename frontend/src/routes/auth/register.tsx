@@ -1,24 +1,36 @@
-import React, {FormEventHandler, useState} from "react";
+import React, {useState} from "react";
 import AuthenticationAPI from "../../api/AuthenticationAPI";
+
+let registrationEnabled = true
 
 export default function Register() {
     const [email, setEmail] = useState("")
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
+    const [status, setStatus] = useState("")
+
     const submit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
 
+        if (!registrationEnabled) {
+            setStatus("Registration is disabled on the beta site.")
+            return
+        }
+
         AuthenticationAPI.submitRegistration(email, username, password)
             .then(result => {
-                console.log(`register result = ${result.data}`)
+                setStatus(result.data.toString())
             }, error => {
                 console.log(`error result = ${error}`)
+                setStatus("registration failed")
             })
     }
 
     return (
         <form onSubmit={submit}>
+            <br></br>
+            <p>{status}</p>
             <br></br>
             <label>Email: </label>
             <input type="text" value={email} onChange={e => setEmail(e.target.value)}/><br></br>

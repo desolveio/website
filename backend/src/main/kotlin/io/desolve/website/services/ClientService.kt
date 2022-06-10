@@ -1,5 +1,6 @@
 package io.desolve.website.services
 
+import io.desolve.services.containers.DesolveContainerHelper
 import io.desolve.services.core.client.DesolveClientConstants
 import io.desolve.services.core.client.DesolveClientService
 import io.desolve.services.core.client.resolver.MultiAddressNameResolverFactory
@@ -12,20 +13,17 @@ import io.desolve.services.protocol.WorkerGrpcKt
  */
 object ClientService
 {
-	// TODO: 6/8/2022 change when in docker prod
 	private val artifactChannel = DesolveClientConstants
-		// DesolveClientConstants.ARTIFACT_RESOLVER
 		.build {
 			MultiAddressNameResolverFactory(
-				"localhost" to 50550
+				DesolveContainerHelper.addressOrHost() to 50550
 			)
 		}
 
 	private val workerChannel = DesolveClientConstants
-		// DesolveClientConstants.ARTIFACT_RESOLVER
 		.build {
 			MultiAddressNameResolverFactory(
-				"localhost" to 50500
+				DesolveContainerHelper.addressOrHost() to 50500
 			)
 		}
 
