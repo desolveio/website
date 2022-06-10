@@ -30,7 +30,10 @@ function App() {
                 <Link to="/page2">Page 2</Link> |{" "}
 
                 {isLoggedIn() ? (
+                    <>
+                        <Link to="/build">Build</Link> |{" "}
                         <Link to="/" onClick={ handleLogout }>Logout</Link>
+                    </>
                 ) : (
                    <>
                         <Link to="/login">Login</Link> |{" "}

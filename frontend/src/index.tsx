@@ -10,8 +10,7 @@ import Login from "./routes/auth/login";
 import Register from "./routes/auth/register";
 import {SetupAxios} from "./utils/AxiosUtil";
 import UserView from "./routes/profile/userView";
-import Page404 from "./routes/404";
-import BuildArtifacts from "./routes/upload";
+import BuildArtifacts from "./routes/broken/build";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -22,8 +21,6 @@ root.render(
         <SetupAxios/>
         <Routes>
             <Route path="/" element={<App/>}>
-                <Route path="404" element={<Page404/>}/>
-
                 <Route path="page1" element={<Page1/>}/>
                 <Route path="page2" element={<Page2/>}/>
 
@@ -31,6 +28,7 @@ root.render(
                 <Route path="register" element={<Register/>}/>
 
                 <Route path="build" element={<BuildArtifacts/>}/>
+
                 <Route path="users/:username" element={<UserView/>}/>
             </Route>
         </Routes>

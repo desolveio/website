@@ -5,8 +5,6 @@ import {useState} from "react";
 
 const BASE_URL = '/api/'
 
-let axiosSetup = false;
-
 const axiosInstance = axios.create({
     baseURL: BASE_URL,
     timeout: 1500,

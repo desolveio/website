@@ -1,7 +1,10 @@
 package io.desolve.website.routing.artifacts
 
 import io.desolve.services.distcache.DesolveDistcacheService
-import io.desolve.services.protocol.*
+import io.desolve.services.protocol.ArtifactLookupRequest
+import io.desolve.services.protocol.ArtifactLookupResult
+import io.desolve.services.protocol.DependencyLocation
+import io.desolve.services.protocol.WorkerRequest
 import io.desolve.website.services.ClientService
 import io.desolve.website.services.artifacts.DesolveArtifactContainer
 import io.ktor.server.application.*
@@ -18,28 +21,20 @@ import java.util.*
 fun Route.routerArtifacts()
 {
     @Serializable
-    class ArtifactCreate(val repository: String, val dependency: String)
+    class ArtifactCreate(val repository: String)
 
     post("createArtifact")
     {
         val creation = this.call
             .receive<ArtifactCreate>()
 
-        val split = creation.dependency
-            .split(":")
-
         val uniqueId = UUID.randomUUID().toString()
 
         val request = WorkerRequest.newBuilder()
             .setArtifactUniqueId(uniqueId)
-            // TODO: 6/7/2022 detect lol
-            .setBuildTool(BuildTool.GRADLE)
             .setSpecification(
                 DependencyLocation.newBuilder()
                     .setRepositoryUrl(creation.repository)
-                    .setGroupId(split[0])
-                    .setArtifactId(split[1])
-                    .setVersion(split[2])
                     .build()
             )
             .setTimestamp(
@@ -47,8 +42,11 @@ fun Route.routerArtifacts()
             )
             .build()
 
-        ClientService.workerClient.stub()
-            .startTaskWork(request)
+        call.respond(
+            ClientService.workerClient.stub()
+                .startTaskWork(request)
+                .status.name
+        )
     }
 
     get("basicLookup/{artifactId}")
