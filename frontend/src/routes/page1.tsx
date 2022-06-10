@@ -8,7 +8,7 @@ export default function Page1() {
     const [status, setStatus] = useState("not called")
     const [artifactStatus, setArtifactStatus] = useState("not called")
     const [information, setInformation] = useState("not called")
-    
+
     return (
         <div>
             <h1>Page 1</h1>
@@ -27,18 +27,6 @@ export default function Page1() {
 
             {isLoggedIn() ? (
                 <>
-                    <button onClick={() => {
-                        // !! testing !!
-                        ArtifactsAPI.createArtifact(
-                            `https://github.com/GrowlyX/ab`,
-                            `io.github.growlyx`, 'ab2', `1.0.0`
-                        ).then(result => {
-                            setArtifactStatus(result.data.toString());
-                        });
-                    }}>Test Worker & Artifact Servers
-                    </button>
-
-                    <br></br>
                     <button onClick={() => {
                         setInformation("loading...");
 
