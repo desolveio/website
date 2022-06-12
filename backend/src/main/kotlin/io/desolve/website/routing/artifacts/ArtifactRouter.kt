@@ -101,7 +101,7 @@ fun Route.routerArtifacts()
                     "description" to "found",
                     "location" to location,
                     "contentExists" to response
-                        .contentMap.isNotEmpty()
+                        .contentMap.isNotEmpty().toString()
                 ))
             }
             else -> {

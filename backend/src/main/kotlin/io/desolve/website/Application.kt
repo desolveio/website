@@ -16,7 +16,7 @@ import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.http.content.react
 import io.ktor.server.http.content.singlePageApplication
-import io.ktor.server.locations.Locations
+import io.ktor.server.locations.*
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.statuspages.StatusPages
@@ -151,7 +151,7 @@ private fun Routing.configureSPA()
 		return
 	}
 
-	// configure KTor to serve Vue content
+	// configure KTor to serve React content
 	singlePageApplication {
 		react("static")
 		useResources = true

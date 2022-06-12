@@ -26,11 +26,6 @@ fun Application.router()
 				routerProfile()
 			}
 
-			route("artifacts")
-			{
-				routerArtifacts()
-			}
-
 			authenticate {
 				routerAuthenticated()
 			}
