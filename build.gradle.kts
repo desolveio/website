@@ -3,6 +3,7 @@ version = "0.0.1"
 
 plugins {
 	idea
+	`maven-publish`
 }
 
 allprojects {

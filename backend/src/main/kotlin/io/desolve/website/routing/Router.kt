@@ -5,6 +5,7 @@ import io.desolve.website.routing.artifacts.routerArtifacts
 import io.desolve.website.routing.authentication.routerAuthenticated
 import io.desolve.website.routing.authentication.routerAuth
 import io.desolve.website.routing.profile.routerProfile
+import io.desolve.website.routing.setup.routerSetup
 import io.ktor.server.application.Application
 import io.ktor.server.auth.*
 import io.ktor.server.routing.route
@@ -21,9 +22,12 @@ fun Application.router()
 		{
 			routerAuth()
 
-			route("user")
-			{
+			route("user") {
 				routerProfile()
+			}
+
+			route("setup") {
+				routerSetup()
 			}
 
 			authenticate {

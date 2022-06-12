@@ -11,6 +11,7 @@ import Register from "./routes/auth/register";
 import {SetupAxios} from "./utils/AxiosUtil";
 import UserView from "./routes/profile/userView";
 import BuildArtifacts from "./routes/broken/build";
+import SetupView from "./routes/setup/setup";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -30,6 +31,7 @@ root.render(
                 <Route path="build" element={<BuildArtifacts/>}/>
 
                 <Route path="users/:username" element={<UserView/>}/>
+                <Route path="setup/:buildTool" element={<SetupView/>}/>
             </Route>
         </Routes>
 

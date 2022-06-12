@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import AuthenticationAPI from "../../api/AuthenticationAPI";
 
-let registrationEnabled = true
+let registrationEnabled = false
 
 export default function Register() {
     const [email, setEmail] = useState("")
