@@ -27,11 +27,6 @@ val desolveJson = Json {
 	useArrayPolymorphism = false
 }
 
-inline fun <reified T> T.stringify(): String
-{
-	return desolveJson.encodeToString(this)
-}
-
 object DesolveUUIDSerializer : KSerializer<UUID>
 {
 

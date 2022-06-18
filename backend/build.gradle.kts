@@ -48,7 +48,7 @@ dependencies {
 
 	// Desolve Services
 	implementation("io.desolve.services:core:$services_version")
-	implementation("io.desolve.services:containers:$services_containers_version")
+	implementation("io.desolve.services:email:$services_version")
 	implementation("io.desolve.services:protocol-stub:$services_version")
 	implementation("io.desolve.services:distcache:$services_version")
 	implementation("io.desolve.services:profiles:$services_profiles_version")
@@ -61,5 +61,5 @@ dependencies {
 
 	// tests
 	testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
-	testImplementation(kotlin("test-junit", kotlin_version))
+	testImplementation(kotlin("test-junit"))
 }
