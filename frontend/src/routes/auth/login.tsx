@@ -1,4 +1,4 @@
-import React, {FormEventHandler, useState} from "react";
+import React, {useState} from "react";
 import AuthenticationAPI from "../../api/AuthenticationAPI";
 import {isLoggedIn, setAuthTokens} from "axios-jwt";
 import {useNavigate, Navigate} from "react-router-dom";
@@ -30,10 +30,6 @@ export default function Login() {
             }, error => {
                 console.log(`error result = ${error}`)
             })
-    }
-
-    if (isLoggedIn()) {
-        return <Navigate to="/"/>
     }
 
     return (

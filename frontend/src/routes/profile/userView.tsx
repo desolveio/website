@@ -22,7 +22,7 @@ export default function UserView() {
     return (
         <div>
             <h1>{params.username}</h1>{" "}
-            <img src={"https://github.com/" + params.username + ".png?size=100"} alt={"Profile Picture"}/>
+            <img src={"https://github.com/" + params.username + ".png?size=100"}/>
 
             <p>Viewing awesome info:</p>
             <p>{data}</p>

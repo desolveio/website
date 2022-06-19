@@ -29,7 +29,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 }
 
 dependencies {
-	implementation(kotlin("jvm"))
+	implementation(kotlin("stdlib"))
 	implementation("io.grpc:grpc-kotlin-stub:1.3.0")
 	// KTor Core
 	implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
