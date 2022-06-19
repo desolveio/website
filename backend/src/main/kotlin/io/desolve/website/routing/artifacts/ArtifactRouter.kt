@@ -56,9 +56,11 @@ fun Route.routerArtifacts()
 
         if (artifactId.isNullOrBlank())
         {
-            call.respond(mapOf(
-                "description" to "invalid artifactId"
-            ))
+            call.respond(
+                mapOf(
+                    "description" to "invalid artifactId"
+                )
+            )
             return@get
         }
 
@@ -68,9 +70,11 @@ fun Route.routerArtifacts()
 
         if (location == null)
         {
-            call.respond(mapOf(
-                "description" to "seems like this artifacts lost woo"
-            ))
+            call.respond(
+                mapOf(
+                    "description" to "seems like this artifacts lost woo"
+                )
+            )
             return@get
         }
 
@@ -86,28 +90,43 @@ fun Route.routerArtifacts()
 
         return@get when (response.result)
         {
-            ArtifactLookupResult.NOT_FOUND -> {
-                call.respond(mapOf(
-                    "description" to "seems like this artifacts lost woo"
-                ))
+            ArtifactLookupResult.NOT_FOUND ->
+            {
+                call.respond(
+                    mapOf(
+                        "description" to "seems like this artifacts lost woo"
+                    )
+                )
             }
-            ArtifactLookupResult.UNRECOGNIZED -> {
-                call.respond(mapOf(
-                    "description" to "did not recognize this artifact"
-                ))
+
+            ArtifactLookupResult.UNRECOGNIZED ->
+            {
+                call.respond(
+                    mapOf(
+                        "description" to "did not recognize this artifact"
+                    )
+                )
             }
-            ArtifactLookupResult.EXISTS -> {
-                call.respond(mapOf(
-                    "description" to "found",
-                    "location" to location,
-                    "contentExists" to response
-                        .contentMap.isNotEmpty().toString()
-                ))
+
+            ArtifactLookupResult.EXISTS ->
+            {
+                call.respond(
+                    mapOf(
+                        "description" to "found",
+                        "location" to location,
+                        "contentExists" to response
+                            .contentMap.isNotEmpty().toString()
+                    )
+                )
             }
-            else -> {
-                call.respond(mapOf(
-                    "description" to "no result was returned"
-                ))
+
+            else ->
+            {
+                call.respond(
+                    mapOf(
+                        "description" to "no result was returned"
+                    )
+                )
             }
         }
     }

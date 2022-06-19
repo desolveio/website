@@ -10,8 +10,9 @@ import Login from "./routes/auth/login";
 import Register from "./routes/auth/register";
 import {SetupAxios} from "./utils/AxiosUtil";
 import UserView from "./routes/profile/userView";
-import BuildArtifacts from "./routes/broken/build";
+import BuildArtifacts from "./routes/build/build";
 import SetupView from "./routes/setup/setup";
+import PrivateRoute from "./components/PrivateRoute";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -21,14 +22,16 @@ root.render(
     <BrowserRouter>
         <SetupAxios/>
         <Routes>
+            <Route element={<PrivateRoute />}>
+                <Route path="/build" element={<BuildArtifacts/>} />
+            </Route>
+
             <Route path="/" element={<App/>}>
                 <Route path="page1" element={<Page1/>}/>
                 <Route path="page2" element={<Page2/>}/>
 
                 <Route path="login" element={<Login/>}/>
                 <Route path="register" element={<Register/>}/>
-
-                <Route path="build" element={<BuildArtifacts/>}/>
 
                 <Route path="users/:username" element={<UserView/>}/>
                 <Route path="setup/:buildTool" element={<SetupView/>}/>

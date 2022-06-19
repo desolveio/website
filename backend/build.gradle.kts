@@ -29,6 +29,8 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 }
 
 dependencies {
+	implementation(kotlin("jvm"))
+	implementation("io.grpc:grpc-kotlin-stub:1.3.0")
 	// KTor Core
 	implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
 	// KTor Content
@@ -48,6 +50,8 @@ dependencies {
 
 	// Desolve Services
 	implementation("io.desolve.services:core:$services_version")
+	implementation("io.desolve.services:core:$services_version")
+	implementation("io.desolve.services:mail:$services_version")
 	implementation("io.desolve.services:containers:$services_containers_version")
 	implementation("io.desolve.services:protocol-stub:$services_version")
 	implementation("io.desolve.services:distcache:$services_version")
