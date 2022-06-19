@@ -23,7 +23,7 @@ root.render(
     <BrowserRouter>
         <SetupAxios/>
         <Routes>
-            <Route element={<PrivateRoute />}>
+            <Route element={<PrivateRoute/>}>
                 <Route path="/build" element={<BuildArtifacts/>} />
             </Route>
 
