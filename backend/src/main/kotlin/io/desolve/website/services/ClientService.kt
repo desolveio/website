@@ -1,9 +1,8 @@
 package io.desolve.website.services
 
-import io.desolve.services.containers.DesolveContainerHelper
+import io.desolve.services.core.DesolveServiceMeta
 import io.desolve.services.core.client.DesolveClientConstants
 import io.desolve.services.core.client.DesolveClientService
-import io.desolve.services.core.client.resolver.MultiAddressNameResolverFactory
 import io.desolve.services.protocol.StowageGrpcKt
 import io.desolve.services.protocol.WorkerGrpcKt
 
@@ -14,18 +13,10 @@ import io.desolve.services.protocol.WorkerGrpcKt
 object ClientService
 {
 	private val artifactChannel = DesolveClientConstants
-		.build {
-			MultiAddressNameResolverFactory(
-				DesolveContainerHelper.addressOrHost() to 50550
-			)
-		}
+		.build(DesolveServiceMeta.Artifacts)
 
 	private val workerChannel = DesolveClientConstants
-		.build {
-			MultiAddressNameResolverFactory(
-				DesolveContainerHelper.addressOrHost() to 50500
-			)
-		}
+		.build(DesolveServiceMeta.Workers)
 
 	val artifactClient =
 		DesolveClientService(
