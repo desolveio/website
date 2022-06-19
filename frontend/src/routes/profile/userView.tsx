@@ -4,7 +4,6 @@ import ProfileAPI from "../../api/ProfileAPI";
 
 export default function UserView() {
     const params = useParams()
-
     const [data, setUserData] = useState("???")
 
     // @ts-ignore
@@ -22,7 +21,7 @@ export default function UserView() {
     return (
         <div>
             <h1>{params.username}</h1>{" "}
-            <img src={"https://github.com/" + params.username + ".png?size=100"}/>
+            <img src={"https://github.com/" + params.username + ".png?size=100"} alt={"hi"}/>
 
             <p>Viewing awesome info:</p>
             <p>{data}</p>

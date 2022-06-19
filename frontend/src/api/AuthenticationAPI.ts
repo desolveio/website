@@ -11,6 +11,10 @@ class AuthenticationAPI {
         return axios.post('auth/register', {email: email, username: username, password: password})
     }
 
+    submitRegistrationVerification(code: string): Promise<AxiosResponse> {
+        return axios.post('/auth/register/verify', {code: code})
+    }
+
     submitLogout(): Promise<AxiosResponse> {
         return axios.get('auth/logout')
     }

@@ -1,9 +1,7 @@
 import React, {useState} from "react";
 import AuthenticationAPI from "../../api/AuthenticationAPI";
-import {isLoggedIn} from "axios-jwt";
-import {Navigate} from "react-router-dom";
 
-let registrationEnabled = false
+let registrationEnabled = true
 
 export default function Register() {
     const [email, setEmail] = useState("")

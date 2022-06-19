@@ -1,5 +1,7 @@
 package io.desolve.website.routing.authentication
 
+import io.desolve.services.distcache.DesolveDistcacheService
+import io.desolve.services.mail.DesolveMailService
 import io.desolve.services.profiles.DesolveUserProfile
 import io.desolve.services.profiles.DesolveUserProfileToken
 import io.desolve.website.authentication.JwtConfig
@@ -10,6 +12,7 @@ import io.desolve.website.extensions.userProfile
 import io.desolve.website.profileService
 import io.desolve.website.regex.emailRegex
 import io.desolve.website.regex.usernameRegex
+import io.desolve.website.services.artifacts.DesolveArtifactContainer
 import io.ktor.server.application.call
 import io.ktor.server.auth.authenticate
 import io.ktor.server.request.receive
@@ -19,6 +22,7 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
+import jakarta.mail.Message
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import org.apache.commons.codec.digest.DigestUtils
@@ -30,6 +34,11 @@ fun Route.routerAuth()
 {
 	route("auth")
 	{
+		@Serializable
+		data class RegisterVerification(
+			@Contextual val code: UUID
+		)
+
 		// TODO: Potentially move these into their own classes/methods maybe?
 		post("register") {
 			val registration = this.call
@@ -90,8 +99,58 @@ fun Route.routerAuth()
 				password = sha256
 			)
 
-			profileService.update(profile)
-			this.call.respondText("Account created successfully")
+			val registrationId = UUID.randomUUID()
+
+			DesolveDistcacheService
+				.container<DesolveArtifactContainer>()
+				.publishExpiringVerificationCode(
+					registration.email.lowercase(),
+					registrationId, profile
+				)
+
+//			val parsed = DesolveMailService.parseTemplate(
+//				template = "email-verification.html",
+//				replacements = arrayOf(
+//					"user" to profile.username,
+//					"registerUrl" to "https://v1.desolve.io/register/verify/${registrationId}"
+//				)
+//			)
+//
+//			DesolveMailService.sendEmail(
+//				subject = "[Desolve] Registration Confirmation", content = parsed,
+//				recipients = arrayOf(
+//					profile.email to Message.RecipientType.TO
+//				)
+//			)
+
+			this.call.respondText("Check your email for a verification code!")
+		}
+
+		post("register/verify") {
+			val request = this.call
+				.receive<RegisterVerification>()
+
+			val container = DesolveDistcacheService
+				.container<DesolveArtifactContainer>()
+
+			if (!container.isValidCode(request.code))
+			{
+				return@post this.call.respond(mapOf(
+					"success" to "false",
+					"description" to "Invalid code provided!"
+				))
+			}
+
+			val information = container
+				.getInformation(request.code)
+
+			profileService.update(information)
+			container.invalidateCode(request.code)
+
+			this.call.respond(mapOf(
+				"success" to "true",
+				"description" to "Navigate to login, account verified!"
+			))
 		}
 
 		suspend fun DesolveUserProfile.updateRefreshToken()

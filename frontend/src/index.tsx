@@ -14,6 +14,8 @@ import BuildArtifacts from "./routes/build/build";
 import SetupView from "./routes/setup/setup";
 import PrivateRoute from "./components/PrivateRoute";
 import AnonRoute from "./components/AnonRoute";
+import RegisterVerify from "./routes/auth/registerVerify";
+import NotFound from "./routes/default/NotFound";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -30,6 +32,7 @@ root.render(
             <Route element={<AnonRoute />}>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/register" element={<Register/>}/>
+                <Route path="/register/verify/:uniqueId" element={<RegisterVerify/>}/>
             </Route>
 
             <Route path="/" element={<App/>}>
@@ -40,7 +43,6 @@ root.render(
                 <Route path="setup/:buildTool" element={<SetupView/>}/>
             </Route>
         </Routes>
-
     </BrowserRouter>
 );
 
