@@ -7,6 +7,7 @@ import io.desolve.services.profiles.DesolveUserProfileToken
 import io.desolve.website.authentication.JwtConfig
 import io.desolve.website.authentication.login.LoginRequest
 import io.desolve.website.authentication.registration.RegistrationRequest
+import io.desolve.website.development
 import io.desolve.website.extensions.ensureUserProfile
 import io.desolve.website.extensions.userProfile
 import io.desolve.website.profileService
@@ -108,20 +109,23 @@ fun Route.routerAuth()
 					registrationId, profile
 				)
 
-//			val parsed = DesolveMailService.parseTemplate(
-//				template = "email-verification.html",
-//				replacements = arrayOf(
-//					"user" to profile.username,
-//					"registerUrl" to "https://v1.desolve.io/register/verify/${registrationId}"
-//				)
-//			)
-//
-//			DesolveMailService.sendEmail(
-//				subject = "[Desolve] Registration Confirmation", content = parsed,
-//				recipients = arrayOf(
-//					profile.email to Message.RecipientType.TO
-//				)
-//			)
+			if (!development)
+			{
+				val parsed = DesolveMailService.parseTemplate(
+					template = "email-verification.html",
+					replacements = arrayOf(
+						"user" to profile.username,
+						"registerUrl" to "https://v1.desolve.io/register/verify/${registrationId}"
+					)
+				)
+
+				DesolveMailService.sendEmail(
+					subject = "[Desolve] Registration Confirmation", content = parsed,
+					recipients = arrayOf(
+						profile.email to Message.RecipientType.TO
+					)
+				)
+			}
 
 			this.call.respondText("Check your email for a verification code!")
 		}

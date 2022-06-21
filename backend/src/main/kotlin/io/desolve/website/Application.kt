@@ -136,14 +136,15 @@ private fun Application.configureRouting()
 	}
 }
 
+val development = System
+	.getProperty("io.ktor.development")
+	?.toBoolean() ?: false
+
 private fun Routing.configureSPA()
 {
 	// if we are in development, we don't want to serve SPA
 	// with SPA enabled, we can't see 404s from the API with ease
 	// as it redirects to the SPA
-	val development = System
-		.getProperty("io.ktor.development")
-		?.toBoolean() ?: false
 
 	if (development)
 	{

@@ -37,7 +37,9 @@ export default function RegisterVerify() {
 
                     {state.success ? (<>
                         <Link to={'/login'}>Click to login!</Link>
-                    </>) : {}}
+                    </>) : (
+                        <></>
+                    )}
                 </>
             ) : (<>
                 <p>Loading...</p>
