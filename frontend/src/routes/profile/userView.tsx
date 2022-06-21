@@ -4,7 +4,9 @@ import ProfileAPI from "../../api/ProfileAPI";
 
 export default function UserView() {
     const {username} = useParams()
-    const [data, setUserData] = useState("???")
+
+    const [data, setUserData] =
+        useState("Loading...")
 
     useEffect(() => {
         // @ts-ignore

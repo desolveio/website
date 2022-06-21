@@ -65,7 +65,7 @@ fun Route.routerAuth()
 				!usernameRegex.matches(registration.username)
 			)
 			{
-				this.call.respondText("Invalid email supplied")
+				this.call.respondText("Invalid username supplied")
 				return@post
 			}
 
