@@ -131,8 +131,15 @@ fun Route.routerAuth()
 		}
 
 		post("register/verify") {
-			val request = this.call
-				.receive<RegisterVerification>()
+			val request = kotlin
+				.runCatching {
+					this.call.receive<RegisterVerification>()
+				}
+				.getOrNull()
+				?: return@post this.call.respond(mapOf(
+					"success" to "false",
+					"description" to "Invalid code format provided!"
+				))
 
 			val container = DesolveDistcacheService
 				.container<DesolveArtifactContainer>()
