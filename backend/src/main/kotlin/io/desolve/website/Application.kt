@@ -34,160 +34,180 @@ import java.util.logging.Logger
 
 fun main()
 {
-	// suppress mongodb logging like I want to suppress the headaches growly gives me
-	Logger.getLogger("org.mongodb.driver").level = Level.SEVERE
+    // suppress mongodb logging like I want to suppress the headaches growly gives me
+    Logger.getLogger("org.mongodb.driver").level = Level.SEVERE
 
-	embeddedServer(
-		Netty,
-		host = "0.0.0.0",
-		port = 8080,
-		watchPaths = listOf("classes", "resources")
-	) {
-		DesolveDistcacheService
-			.container(
-				DesolveArtifactContainer()
-			)
+    embeddedServer(
+        Netty,
+        host = "0.0.0.0",
+        port = 8080,
+        watchPaths = listOf("classes", "resources")
+    ) {
+        DesolveDistcacheService
+            .container(
+                DesolveArtifactContainer()
+            )
 
-		routing()
-		println("Started website on http://localhost:8080")
+        routing()
+        println("Started website on http://localhost:8080")
 
-		Runtime.getRuntime().addShutdownHook(Thread {
-			println("Shutting down client services...")
+        Runtime.getRuntime().addShutdownHook(Thread {
+            println("Shutting down client services...")
 
-			ClientService.close()
-		})
-	}.start(wait = true)
+            ClientService.close()
+        })
+    }.start(wait = true)
 }
 
 fun Application.routing()
 {
-	configureRouting()
-	configureAuthentication()
+    configureRouting()
+    configureAuthentication()
 
-	routing {
-		configureSPA()
-	}
+    routing {
+        configureSPA()
+    }
 }
 
 val profileService by lazy {
-	DesolveUserProfilePlatformTools.service()
+    DesolveUserProfilePlatformTools.service()
 }
 
 fun Application.configureAuthentication()
 {
-	install(Authentication) {
-		jwt {
-			verifier(JwtConfig.verifier)
-			this.realm = "desolve.io"
+    install(Authentication) {
+        jwt {
+            verifier(JwtConfig.verifier)
+            this.realm = "desolve.io"
 
-			validate {
-				val uniqueId = it.payload
-					.getClaim("uniqueId")
-					.asString()
-					?: return@validate null
+            validate {
+                val uniqueId = it.payload
+                    .getClaim("uniqueId")
+                    .asString()
+                    ?: return@validate null
 
-				return@validate profileService
-					.findByUniqueId(
-						UUID.fromString(uniqueId)
-					)
-			}
-		}
-	}
+                return@validate profileService
+                    .findByUniqueId(
+                        UUID.fromString(uniqueId)
+                    )
+            }
+        }
+    }
 }
 
 private fun Application.configureRouting()
 {
-	// TODO: improve?
-	val excluded = listOf(
-		"artifacts/basicLookup",
-		"auth/optional",
-		"auth/register/verify",
-		"setup/setupData",
-		"user/information",
-		"user/information/view"
-	)
+    // TODO: improve?
+    val excluded = listOf(
+        "/api/artifacts/basicLookup",
+        "/api/auth/optional",
+        "/api/auth/register/verify",
+        "/api/setup/setupData",
+        "/api/user/information",
+        "/api/user/information/view",
+        "/sw.js",
+        "/favicon.ico"
+    )
 
-	install(Locations)
-	install(RateLimiting) {
-		registerLimit(
-			limit = 10,
-			window = Duration
-				.ofMinutes(1)
-		) {
-			this.request.origin.host
-		}
+    install(Locations)
+    install(RateLimiting) {
+        registerLimit(
+            limit = 10,
+            window = Duration
+                .ofSeconds(25)
+        ) {
+            this.request.origin.host
+        }
 
-		excludeRequestWhen {
-			excluded.any {
-				this.request.path()
-					.lowercase()
-					.startsWith(
-						"/api/$it"
-					)
-			}
-		}
-	}
-	install(ContentNegotiation) {
-		json(
-			json = desolveJson
-		)
-	}
+        rateLimitHit { _, retryAfter ->
+            this.request.call.respond(
+                HttpStatusCode.TooManyRequests,
+                mapOf(
+                    "description" to "Rate Limit Hit",
+                    "retryAfter" to "$retryAfter",
+                    "retryAfterTimeUnit" to "SECONDS"
+                )
+            )
+        }
 
-	this.router()
+        excludeRequestWhen {
+            println(
+                this.request.path()
+                    .lowercase()
+            )
 
-	val betterStatusCodes = System
-		.getProperty("io.desolve.website.status")
-		?.toBoolean() ?: false
+            excluded.any {
+                this.request.path()
+                    .lowercase()
+                    .startsWith(it)
+            }
+        }
+    }
+    install(ContentNegotiation) {
+        json(
+            json = desolveJson
+        )
+    }
 
-	install(StatusPages) {
-		if (betterStatusCodes)
-		{
-			val cat404 = URL("https://http.cat/404")
-				.readBytes()
+    this.router()
 
-			status(HttpStatusCode.NotFound) { call, _ ->
-				call.respondBytes(
-					status = HttpStatusCode.NotFound,
-					bytes = cat404
-				)
-			}
+    val betterStatusCodes = System
+        .getProperty("io.desolve.website.status")
+        ?.toBoolean() ?: false
 
-			return@install
-		}
+    install(StatusPages) {
+        if (betterStatusCodes)
+        {
+            val cat404 = URL("https://http.cat/404")
+                .readBytes()
 
-		status(HttpStatusCode.NotFound) { call, _ ->
-			call.respond(mapOf(
-				"description" to "404 Not Found"
-			))
-		}
+            status(HttpStatusCode.NotFound) { call, _ ->
+                call.respondBytes(
+                    status = HttpStatusCode.NotFound,
+                    bytes = cat404
+                )
+            }
 
-		status(HttpStatusCode.Unauthorized) { call, _ ->
-			call.respond(mapOf(
-				"description" to "401 Unauthorized"
-			))
-		}
-	}
+            return@install
+        }
+
+        status(HttpStatusCode.NotFound) { call, _ ->
+            call.respond(
+                mapOf(
+                    "description" to "404 Not Found"
+                )
+            )
+        }
+
+        status(HttpStatusCode.Unauthorized) { call, _ ->
+            call.respond(
+                mapOf(
+                    "description" to "401 Unauthorized"
+                )
+            )
+        }
+    }
 }
 
 val development = System
-	.getProperty("io.ktor.development")
-	?.toBoolean() ?: false
+    .getProperty("io.ktor.development")
+    ?.toBoolean() ?: false
 
 private fun Routing.configureSPA()
 {
-	// if we are in development, we don't want to serve SPA
-	// with SPA enabled, we can't see 404s from the API with ease
-	// as it redirects to the SPA
+    // if we are in development, we don't want to serve SPA
+    // with SPA enabled, we can't see 404s from the API with ease
+    // as it redirects to the SPA
 
-	if (development)
-	{
-		println("Skipping SPA configuration as a development environment has been detected.")
-		return
-	}
+    if (development)
+    {
+        println("Skipping SPA configuration as a development environment has been detected.")
+        return
+    }
 
-	// configure KTor to serve React content
-	singlePageApplication {
-		react("static")
-		useResources = true
-	}
+    // configure KTor to serve React content
+    singlePageApplication {
+        react("static")
+        useResources = true
+    }
 }
