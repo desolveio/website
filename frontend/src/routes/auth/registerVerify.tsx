@@ -1,38 +1,43 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import AuthenticationAPI from "../../api/AuthenticationAPI";
 import {Link, useParams} from "react-router-dom";
 
 export default function RegisterVerify() {
-    const params = useParams()
-    const [data, setData] = useState({
+    const [state, setState] = useState({
         updated: false, success: false, description: ""
     })
 
-    // @ts-ignore
-    AuthenticationAPI.submitRegistrationVerification(params.uniqueId.toString())
-        .then(response => {
-            setData({
-                updated: true, success: response.data.success,
-                description: response.data.description
+    let {uniqueId} = useParams();
+
+    useEffect(() => {
+        AuthenticationAPI
+            .submitRegistrationVerification(
+                (uniqueId as any).toString()
+            )
+            .then(response => {
+                setState({
+                    updated: true, success: response.data.success,
+                    description: response.data.description
+                })
             })
-        })
-        .catch(error => {
-            setData({
-                updated: true, success: false,
-                description: "Server failure: " + error
+            .catch(error => {
+                setState({
+                    updated: true, success: false,
+                    description: "Server failure: " + error
+                })
             })
-        })
+    }, [uniqueId])
 
     return (
         <div>
-            {data.updated ? (
+            {state.updated ? (
                 <>
-                    <h1>{data.success ? "Success" : "Failure"}</h1>
-                    <p>{data.description}</p>
+                    <h1>{state.success ? "Success" : "Failure"}</h1>
+                    <p>{state.description}</p>
 
-                    {data.success ? (<>
+                    {state.success ? (<>
                         <Link to={'/login'}>Click to login!</Link>
-                    </>):{}}
+                    </>) : {}}
                 </>
             ) : (<>
                 <p>Loading...</p>

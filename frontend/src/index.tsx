@@ -15,7 +15,6 @@ import SetupView from "./routes/setup/setup";
 import PrivateRoute from "./components/PrivateRoute";
 import AnonRoute from "./components/AnonRoute";
 import RegisterVerify from "./routes/auth/registerVerify";
-import NotFound from "./routes/default/NotFound";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
