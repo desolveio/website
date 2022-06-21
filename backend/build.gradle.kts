@@ -57,8 +57,9 @@ dependencies {
 	implementation("io.desolve.services:distcache:$services_version")
 	implementation("io.desolve.services:profiles:$services_profiles_version")
 
-	// Apache Commons
+	// Misc.
 	implementation("commons-codec:commons-codec:1.15")
+	implementation("dev.forst:ktor-rate-limiting:1.3.3")
 
 	// KMongo
 	implementation("org.litote.kmongo:kmongo-coroutine-serialization:$kmongo_version")

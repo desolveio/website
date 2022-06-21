@@ -1,5 +1,6 @@
 package io.desolve.website
 
+import dev.forst.ktor.ratelimiting.RateLimiting
 import io.desolve.services.distcache.DesolveDistcacheService
 import io.desolve.services.profiles.DesolveUserProfilePlatformTools
 import io.desolve.website.authentication.JwtConfig
@@ -19,11 +20,14 @@ import io.ktor.server.http.content.singlePageApplication
 import io.ktor.server.locations.*
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.server.plugins.origin
 import io.ktor.server.plugins.statuspages.StatusPages
+import io.ktor.server.request.path
 import io.ktor.server.response.*
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.routing
 import java.net.URL
+import java.time.Duration
 import java.util.UUID
 import java.util.logging.Level
 import java.util.logging.Logger
@@ -93,7 +97,36 @@ fun Application.configureAuthentication()
 
 private fun Application.configureRouting()
 {
+	// TODO: improve?
+	val excluded = listOf(
+		"artifacts/basicLookup",
+		"auth/optional",
+		"auth/register/verify",
+		"setup/setupData",
+		"user/information",
+		"user/information/view"
+	)
+
 	install(Locations)
+	install(RateLimiting) {
+		registerLimit(
+			limit = 10,
+			window = Duration
+				.ofMinutes(1)
+		) {
+			this.request.origin.host
+		}
+
+		excludeRequestWhen {
+			excluded.any {
+				this.request.path()
+					.lowercase()
+					.startsWith(
+						"/api/$it"
+					)
+			}
+		}
+	}
 	install(ContentNegotiation) {
 		json(
 			json = desolveJson
