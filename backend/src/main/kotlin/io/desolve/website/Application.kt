@@ -180,7 +180,7 @@ private fun Application.configureRouting()
         )
     }
 
-    this.router()
+    this.router(registry)
 
     val betterStatusCodes = System
         .getProperty("io.desolve.website.status")

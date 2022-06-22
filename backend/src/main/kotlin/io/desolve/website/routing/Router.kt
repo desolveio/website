@@ -1,22 +1,20 @@
 package io.desolve.website.routing
 
-import com.google.common.cache.CacheBuilder
-import io.desolve.website.routing.artifacts.routerArtifacts
-import io.desolve.website.routing.authentication.routerAuthenticated
 import io.desolve.website.routing.authentication.routerAuth
+import io.desolve.website.routing.authentication.routerAuthenticated
 import io.desolve.website.routing.profile.routerProfile
 import io.desolve.website.routing.setup.routerSetup
 import io.ktor.server.application.Application
+import io.ktor.server.application.call
 import io.ktor.server.auth.*
+import io.ktor.server.response.respondText
+import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
+import io.micrometer.prometheus.PrometheusMeterRegistry
 
-fun Application.router()
+fun Application.router(registry: PrometheusMeterRegistry)
 {
-	// TODO: 6/6/2022 rater limiting?
-	val rateLimit = CacheBuilder.newBuilder()
-		.build<String, Int>()
-
 	routing {
 		route("api")
 		{
@@ -32,6 +30,11 @@ fun Application.router()
 
 			authenticate {
 				routerAuthenticated()
+			}
+
+			get("metrics") {
+				// TODO: "firewall" - call.request.local.remoteHost
+				call.respondText(registry.scrape())
 			}
 		}
 	}
