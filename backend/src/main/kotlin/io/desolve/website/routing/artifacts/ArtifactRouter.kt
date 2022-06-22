@@ -1,5 +1,6 @@
 package io.desolve.website.routing.artifacts
 
+import io.desolve.services.artifacts.dao.DesolveStoredArtifactService
 import io.desolve.services.distcache.DesolveDistcacheService
 import io.desolve.services.protocol.ArtifactLookupRequest
 import io.desolve.services.protocol.ArtifactLookupResult
@@ -20,8 +21,18 @@ import java.util.*
  */
 fun Route.routerArtifacts()
 {
+    val service = DesolveStoredArtifactService()
+
     @Serializable
     class ArtifactCreate(val repository: String)
+
+    @Serializable
+    @Suppress("unused")
+    class ArtifactMetrics(
+        val downloads: List<Long>,
+        val firstDownload: Long?,
+        val lastDownload: Long?
+    )
 
     post("createArtifact")
     {
@@ -55,7 +66,24 @@ fun Route.routerArtifacts()
             .parseArtifactId()
             ?: return@get
 
+        val model = service
+            .findByUniqueId(
+                UUID.fromString(artifactId)
+            )
+            ?: return@get call.respond(
+                mapOf(
+                    "description" to "no model found for artifactId"
+                )
+            )
 
+        // easier for other languages to work with our Instants
+        val metrics = ArtifactMetrics(
+            model.metrics.downloads.map { it.toEpochMilli() },
+            model.metrics.firstDownloaded?.toEpochMilli(),
+            model.metrics.lastDownloaded?.toEpochMilli()
+        )
+
+        call.respond(metrics)
     }
 
     get("basicLookup/{artifactId}")

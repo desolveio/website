@@ -54,7 +54,7 @@ dependencies {
 
 	// Desolve Services
 	implementation("io.desolve.services:core:$services_version")
-	implementation("io.desolve.services:core:$services_version")
+	implementation("io.desolve.services:artifacts-dao:$services_version")
 	implementation("io.desolve.services:mail:$services_version")
 	implementation("io.desolve.services:containers:$services_containers_version")
 	implementation("io.desolve.services:protocol-stub:$services_version")
