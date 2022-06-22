@@ -48,6 +48,10 @@ dependencies {
 	// logging
 	implementation("ch.qos.logback:logback-classic:$logback_version")
 
+	implementation("io.ktor:ktor-server-metrics:$ktor_version")
+	implementation("io.ktor:ktor-server-metrics-micrometer:$ktor_version")
+	implementation("io.micrometer:micrometer-registry-prometheus:1.9.0")
+
 	// Desolve Services
 	implementation("io.desolve.services:core:$services_version")
 	implementation("io.desolve.services:core:$services_version")

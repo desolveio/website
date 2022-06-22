@@ -49,20 +49,20 @@ fun Route.routerArtifacts()
         )
     }
 
+    get("metrics/{artifactId}")
+    {
+        val artifactId = this.call
+            .parseArtifactId()
+            ?: return@get
+
+
+    }
+
     get("basicLookup/{artifactId}")
     {
-        val artifactId = call
-            .parameters["artifactId"]
-
-        if (artifactId.isNullOrBlank())
-        {
-            call.respond(
-                mapOf(
-                    "description" to "invalid artifactId"
-                )
-            )
-            return@get
-        }
+        val artifactId = this.call
+            .parseArtifactId()
+            ?: return@get
 
         val location = DesolveDistcacheService
             .container<DesolveArtifactContainer>()
@@ -130,4 +130,38 @@ fun Route.routerArtifacts()
             }
         }
     }
+}
+
+suspend fun ApplicationCall.parseArtifactId(): String?
+{
+    val artifactId = parameters["artifactId"]
+
+    if (artifactId.isNullOrBlank())
+    {
+        respond(
+            mapOf(
+                "description" to "invalid artifactId"
+            )
+        )
+        return null
+    }
+
+    val uniqueId = kotlin
+        .runCatching {
+            UUID.fromString(artifactId)
+        }
+        .getOrNull()
+
+
+    if (uniqueId == null)
+    {
+        respond(
+            mapOf(
+                "description" to "invalid artifactId"
+            )
+        )
+        return null
+    }
+
+    return artifactId
 }

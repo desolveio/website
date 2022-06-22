@@ -18,6 +18,7 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.http.content.react
 import io.ktor.server.http.content.singlePageApplication
 import io.ktor.server.locations.*
+import io.ktor.server.metrics.micrometer.MicrometerMetrics
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.origin
@@ -26,6 +27,17 @@ import io.ktor.server.request.path
 import io.ktor.server.response.*
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.routing
+import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics
+import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics
+import io.micrometer.core.instrument.binder.jvm.JvmInfoMetrics
+import io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics
+import io.micrometer.core.instrument.binder.jvm.JvmThreadMetrics
+import io.micrometer.core.instrument.binder.logging.Log4j2Metrics
+import io.micrometer.core.instrument.binder.system.FileDescriptorMetrics
+import io.micrometer.core.instrument.binder.system.ProcessorMetrics
+import io.micrometer.core.instrument.binder.system.UptimeMetrics
+import io.micrometer.prometheus.PrometheusConfig
+import io.micrometer.prometheus.PrometheusMeterRegistry
 import java.net.URL
 import java.time.Duration
 import java.util.UUID
@@ -109,6 +121,11 @@ private fun Application.configureRouting()
         "/favicon.ico"
     )
 
+    val registry =
+        PrometheusMeterRegistry(
+            PrometheusConfig.DEFAULT
+        )
+
     install(Locations)
     install(RateLimiting) {
         registerLimit(
@@ -146,6 +163,20 @@ private fun Application.configureRouting()
     install(ContentNegotiation) {
         json(
             json = desolveJson
+        )
+    }
+    install(MicrometerMetrics) {
+        this.registry = registry
+        this.meterBinders = listOf(
+            ClassLoaderMetrics(),
+            JvmMemoryMetrics(),
+            JvmGcMetrics(),
+            ProcessorMetrics(),
+            JvmThreadMetrics(),
+            JvmInfoMetrics(),
+            Log4j2Metrics(),
+            FileDescriptorMetrics(),
+            UptimeMetrics()
         )
     }
 
