@@ -1,6 +1,7 @@
 package io.desolve.website.routing.artifacts
 
 import io.desolve.services.artifacts.dao.DesolveStoredArtifactService
+import io.desolve.services.artifacts.dao.DesolveStoredProjectService
 import io.desolve.services.distcache.DesolveDistcacheService
 import io.desolve.services.protocol.ArtifactLookupRequest
 import io.desolve.services.protocol.ArtifactLookupResult
@@ -22,9 +23,10 @@ import java.util.*
 fun Route.routerArtifacts()
 {
     val service = DesolveStoredArtifactService()
+    val projectService = DesolveStoredProjectService()
 
     @Serializable
-    class ArtifactCreate(val repository: String)
+    class Repository(val repository: String)
 
     @Serializable
     @Suppress("unused")
@@ -37,7 +39,7 @@ fun Route.routerArtifacts()
     post("createArtifact")
     {
         val creation = this.call
-            .receive<ArtifactCreate>()
+            .receive<Repository>()
 
         val uniqueId = UUID.randomUUID().toString()
 
@@ -58,6 +60,24 @@ fun Route.routerArtifacts()
                 .startTaskWork(request)
                 .status.name
         )
+    }
+
+    get("projectData")
+    {
+        val request = call
+            .receive<Repository>()
+
+        val project = projectService
+            .byRepository(
+                request.repository.lowercase()
+            )
+            ?: return@get call.respond(
+                mapOf(
+                    "description" to "invalid repository/no project found"
+                )
+            )
+
+        call.respond(project)
     }
 
     get("metrics/{artifactId}")

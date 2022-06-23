@@ -15,6 +15,7 @@ import SetupView from "./routes/setup/setup";
 import PrivateRoute from "./components/PrivateRoute";
 import AnonRoute from "./components/AnonRoute";
 import RegisterVerify from "./routes/auth/registerVerify";
+import ProjectInfo from "./routes/project/projectInfo";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -28,7 +29,7 @@ root.render(
                 <Route path="/build" element={<BuildArtifacts/>} />
             </Route>
 
-            <Route element={<AnonRoute />}>
+            <Route element={<AnonRoute/>}>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/register" element={<Register/>}/>
                 <Route path="/register/verify/:uniqueId" element={<RegisterVerify/>}/>
@@ -40,6 +41,8 @@ root.render(
 
                 <Route path="users/:username" element={<UserView/>}/>
                 <Route path="setup/:buildTool" element={<SetupView/>}/>
+
+                <Route path="project/:userId/:projectName" element={<ProjectInfo/>}/>
             </Route>
         </Routes>
     </BrowserRouter>
