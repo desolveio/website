@@ -11,6 +11,7 @@ export default function ProjectInfo() {
 
     useEffect(() => {
         ProjectAPI
+            // TODO: allow diff git providers
             .projectData(`https://github.com/${userId}/${projectName}`)
             .then(response => {
                 setState({

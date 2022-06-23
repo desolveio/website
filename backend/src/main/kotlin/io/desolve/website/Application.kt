@@ -8,7 +8,7 @@ import io.desolve.website.routing.router
 import io.desolve.website.services.ClientService
 import io.desolve.website.services.artifacts.DesolveArtifactContainer
 import io.desolve.website.utils.desolveJson
-import io.ktor.http.*
+import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
@@ -17,14 +17,15 @@ import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.http.content.react
 import io.ktor.server.http.content.singlePageApplication
-import io.ktor.server.locations.*
+import io.ktor.server.locations.Locations
 import io.ktor.server.metrics.micrometer.MicrometerMetrics
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.plugins.origin
 import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.request.path
-import io.ktor.server.response.*
+import io.ktor.server.response.respond
+import io.ktor.server.response.respondBytes
 import io.ktor.server.routing.Routing
 import io.ktor.server.routing.routing
 import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics
@@ -32,7 +33,6 @@ import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics
 import io.micrometer.core.instrument.binder.jvm.JvmInfoMetrics
 import io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics
 import io.micrometer.core.instrument.binder.jvm.JvmThreadMetrics
-import io.micrometer.core.instrument.binder.logging.Log4j2Metrics
 import io.micrometer.core.instrument.binder.system.FileDescriptorMetrics
 import io.micrometer.core.instrument.binder.system.ProcessorMetrics
 import io.micrometer.core.instrument.binder.system.UptimeMetrics
@@ -40,7 +40,7 @@ import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import java.net.URL
 import java.time.Duration
-import java.util.UUID
+import java.util.*
 import java.util.logging.Level
 import java.util.logging.Logger
 
@@ -116,9 +116,7 @@ private fun Application.configureRouting()
         "/api/auth/register/verify",
         "/api/setup/setupData",
         "/api/user/information",
-        "/api/user/information/view",
-        "/sw.js",
-        "/favicon.ico"
+        "/api/user/information/view"
     )
 
     val registry =
@@ -148,12 +146,8 @@ private fun Application.configureRouting()
         }
 
         excludeRequestWhen {
-            println(
-                this.request.path()
-                    .lowercase()
-            )
-
             excluded.any {
+                !it.startsWith("/api") ||
                 this.request.path()
                     .lowercase()
                     .startsWith(it)
@@ -174,7 +168,6 @@ private fun Application.configureRouting()
             ProcessorMetrics(),
             JvmThreadMetrics(),
             JvmInfoMetrics(),
-            Log4j2Metrics(),
             FileDescriptorMetrics(),
             UptimeMetrics()
         )
