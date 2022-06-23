@@ -14,7 +14,7 @@ export default function ProjectInfo() {
             .projectData(`https://github.com/${userId}/${projectName}`)
             .then(response => {
                 setState({
-                    updated: true, associated: response.data.associated,
+                    updated: true, associated: response.data.project.associated,
                     description: response.data.description
                 })
             })
