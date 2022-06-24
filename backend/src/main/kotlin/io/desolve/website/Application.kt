@@ -138,9 +138,9 @@ private fun Application.configureRouting()
     install(Locations)
     install(RateLimiting) {
         registerLimit(
-            limit = 10,
+            limit = 200,
             window = Duration
-                .ofSeconds(25)
+                .ofSeconds(10)
         ) {
             this.request.origin.host
         }
