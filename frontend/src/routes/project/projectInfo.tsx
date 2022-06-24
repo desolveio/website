@@ -34,7 +34,7 @@ export default function ProjectInfo() {
                     <h1>{state.description == null ? "Viewing project info for: " + `${userId}/${projectName}` : "Not found"}</h1>
 
                     {state.description == null ? (<>
-                        <p>{state.associated}</p>
+                        <p>{JSON.stringify(state.associated)}</p>
                     </>) : (
                         <p>This project was not found.</p>
                     )}

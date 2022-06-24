@@ -1,6 +1,8 @@
 package io.desolve.website
 
 import dev.forst.ktor.ratelimiting.RateLimiting
+import io.desolve.services.artifacts.dao.DesolveStoredArtifactService
+import io.desolve.services.artifacts.dao.DesolveStoredProjectService
 import io.desolve.services.distcache.DesolveDistcacheService
 import io.desolve.services.profiles.DesolveUserProfilePlatformTools
 import io.desolve.website.authentication.JwtConfig
@@ -11,6 +13,7 @@ import io.desolve.website.utils.desolveJson
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
+import io.ktor.server.application.call
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.jwt.jwt
@@ -26,7 +29,10 @@ import io.ktor.server.plugins.statuspages.StatusPages
 import io.ktor.server.request.path
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondBytes
+import io.ktor.server.response.respondText
 import io.ktor.server.routing.Routing
+import io.ktor.server.routing.get
+import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics
 import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics
@@ -43,6 +49,9 @@ import java.time.Duration
 import java.util.*
 import java.util.logging.Level
 import java.util.logging.Logger
+
+val service = DesolveStoredArtifactService()
+val projectService = DesolveStoredProjectService()
 
 fun main()
 {
@@ -112,6 +121,8 @@ private fun Application.configureRouting()
     // TODO: improve?
     val excluded = listOf(
         "/api/artifacts/basicLookup",
+        "/api/artifacts/projectData",
+        "/api/artifacts/metrics",
         "/api/auth/optional",
         "/api/auth/register/verify",
         "/api/setup/setupData",
@@ -146,12 +157,12 @@ private fun Application.configureRouting()
         }
 
         excludeRequestWhen {
-            excluded.any {
-                !it.startsWith("/api") ||
-                this.request.path()
-                    .lowercase()
-                    .startsWith(it)
-            }
+            !request.path().startsWith("/api") ||
+                    excluded.any {
+                        this.request.path()
+                            .lowercase()
+                            .startsWith(it)
+                    }
         }
     }
     install(ContentNegotiation) {
@@ -159,18 +170,33 @@ private fun Application.configureRouting()
             json = desolveJson
         )
     }
-    install(MicrometerMetrics) {
-        this.registry = registry
-        this.meterBinders = listOf(
-            ClassLoaderMetrics(),
-            JvmMemoryMetrics(),
-            JvmGcMetrics(),
-            ProcessorMetrics(),
-            JvmThreadMetrics(),
-            JvmInfoMetrics(),
-            FileDescriptorMetrics(),
-            UptimeMetrics()
-        )
+
+    val metrics = System
+        .getProperty("io.desolve.website.status")
+        ?.toBoolean() ?: false
+
+    if (metrics)
+    {
+        install(MicrometerMetrics) {
+            this.registry = registry
+            this.meterBinders = listOf(
+                ClassLoaderMetrics(),
+                JvmMemoryMetrics(),
+                JvmGcMetrics(),
+                ProcessorMetrics(),
+                JvmThreadMetrics(),
+                JvmInfoMetrics(),
+                FileDescriptorMetrics(),
+                UptimeMetrics()
+            )
+        }
+
+        routing {
+            get("metrics") {
+                // TODO: "firewall" - call.request.local.remoteHost
+                call.respondText(registry.scrape())
+            }
+        }
     }
 
     this.router(registry)

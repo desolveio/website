@@ -1,5 +1,6 @@
 package io.desolve.website.routing
 
+import io.desolve.website.routing.artifacts.routerArtifactsAnon
 import io.desolve.website.routing.authentication.routerAuth
 import io.desolve.website.routing.authentication.routerAuthenticated
 import io.desolve.website.routing.profile.routerProfile
@@ -28,13 +29,12 @@ fun Application.router(registry: PrometheusMeterRegistry)
 				routerSetup()
 			}
 
-			authenticate {
-				routerAuthenticated()
+			route("artifacts") {
+				routerArtifactsAnon()
 			}
 
-			get("metrics") {
-				// TODO: "firewall" - call.request.local.remoteHost
-				call.respondText(registry.scrape())
+			authenticate {
+				routerAuthenticated()
 			}
 		}
 	}
