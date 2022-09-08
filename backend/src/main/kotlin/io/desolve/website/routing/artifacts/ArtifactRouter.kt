@@ -96,9 +96,7 @@ fun Route.routerArtifacts()
 {
     post("createArtifact")
     {
-        val creation = this.call
-            .receive<Repository>()
-
+        val creation = this.call.receive<Repository>()
         val uniqueId = UUID.randomUUID().toString()
 
         val request = WorkerRequest.newBuilder()

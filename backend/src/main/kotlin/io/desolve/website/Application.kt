@@ -175,7 +175,7 @@ private fun Application.configureRouting()
     }
 
     val metrics = System
-        .getProperty("io.desolve.website.status")
+        .getProperty("io.desolve.website.metrics")
         ?.toBoolean() ?: false
 
     if (metrics)
