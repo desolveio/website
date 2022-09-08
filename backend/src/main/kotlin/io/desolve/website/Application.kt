@@ -140,7 +140,7 @@ private fun Application.configureRouting()
     install(Locations)
     install(RateLimiting) {
         registerLimit(
-            limit = 200,
+            limit = 100,
             window = Duration
                 .ofSeconds(10)
         ) {
