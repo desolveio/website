@@ -3,8 +3,8 @@ import {AxiosResponse} from "axios"
 
 class SetupAPI {
 
-    getBuildToolData(buildTool: String): Promise<AxiosResponse> {
-        return axios.post('setup/setupData', {buildTool: buildTool})
+    getRepoDeclaration(buildTool: String): Promise<AxiosResponse> {
+        return axios.post('setup/repoDeclaration', {buildTool: buildTool})
     }
 
 }

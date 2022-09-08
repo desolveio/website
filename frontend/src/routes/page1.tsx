@@ -41,7 +41,7 @@ export default function Page1() {
                     <button onClick={() => {
                         setInformation("loading...");
 
-                        ProfileAPI.grabInformation()
+                        ProfileAPI.getData()
                             .then(test => {
                                 console.log(`Test result = ${JSON.stringify(test.data)}`);
                                 setInformation(JSON.stringify(test.data));

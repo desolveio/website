@@ -19,7 +19,7 @@ Creating the development environment:
 When running the development environment:
 - **NOTE:** In the development environment the backend will not serve the React content,
 - You'll be wanting to access the frontend by access it at https://localhost:3000.
-- If you specifically need to test the backend, you can access it at https://localhost:8080
+- If you specifically need to test the backend, you can access it at https://localhost:8087
 
 If you'd like to test a production build either follow these provided steps or see the Production section:
 - Simply run `gradle :final:run` or `gradle :final:runShadow`

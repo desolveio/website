@@ -9,7 +9,7 @@ export default function SetupView() {
 
     useEffect(() => {
         // @ts-ignore
-        SetupAPI.getBuildToolData(buildTool.toString())
+        SetupAPI.getRepoDeclaration(buildTool.toString())
             .then(data => {
                 setBuildToolData(
                     data.data.content

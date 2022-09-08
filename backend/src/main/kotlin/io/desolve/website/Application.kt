@@ -53,15 +53,17 @@ import java.util.logging.Logger
 val service = DesolveStoredArtifactService()
 val projectService = DesolveStoredProjectService()
 
-fun main()
+fun main(vararg args: String)
 {
+    val port = args.firstOrNull()?.toIntOrNull() ?: 8087
+
     // suppress mongodb logging like I want to suppress the headaches growly gives me
     Logger.getLogger("org.mongodb.driver").level = Level.SEVERE
 
     embeddedServer(
         Netty,
         host = "0.0.0.0",
-        port = 8080,
+        port = port,
         watchPaths = listOf("classes", "resources")
     ) {
         DesolveDistcacheService
@@ -70,7 +72,7 @@ fun main()
             )
 
         routing()
-        println("Started website on http://localhost:8080")
+        println("Started website on http://localhost:$port")
 
         Runtime.getRuntime().addShutdownHook(Thread {
             println("Shutting down client services...")
@@ -125,9 +127,9 @@ private fun Application.configureRouting()
         "/api/artifacts/metrics",
         "/api/auth/optional",
         "/api/auth/register/verify",
-        "/api/setup/setupData",
-        "/api/user/information",
-        "/api/user/information/view"
+        "/api/setup/repoDeclaration",
+        "/api/user/data",
+        "/api/user/data/view"
     )
 
     val registry =
@@ -165,6 +167,7 @@ private fun Application.configureRouting()
                     }
         }
     }
+
     install(ContentNegotiation) {
         json(
             json = desolveJson

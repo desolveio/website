@@ -17,7 +17,7 @@ fun Route.routerSetup()
            allprojects {
            	repositories {
            		...
-           		maven { url "https://v1.desolve.io/repository" }
+           		maven { url "https://desolve.io/repository" }
            	}
            }
         """.trimIndent(),
@@ -25,19 +25,19 @@ fun Route.routerSetup()
             <repositories>
             	<repository>
             	    <id>desolve.io</id>
-            	    <url>https://v1.desolve.io/repository</url>
+            	    <url>https://desolve.io/repository</url>
             	</repository>
             </repositories>
         """.trimIndent(),
         "sbt" to """
-            resolvers += "desolve" at "https://v1.desolve.io/repository"
+            resolvers += "desolve" at "https://desolve.io/repository"
         """.trimIndent(),
     )
 
     @Serializable
     data class SetupRequest(val buildTool: String)
 
-    post("setupData") {
+    post("repoDeclaration") {
         val request = this.call
             .receive<SetupRequest>()
 

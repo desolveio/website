@@ -3,12 +3,12 @@ import {AxiosResponse} from "axios"
 
 class ProfileAPI {
 
-    grabInformation(): Promise<AxiosResponse> {
-        return axios.get('user/information')
+    getData(): Promise<AxiosResponse> {
+        return axios.get('user/data')
     }
 
-    grabInformationOf(user: String): Promise<AxiosResponse> {
-        return axios.get("user/information/view/" + user)
+    getDataOf(user: String): Promise<AxiosResponse> {
+        return axios.get("user/data/view/" + user)
     }
 
 }

@@ -10,7 +10,7 @@ export default function UserView() {
 
     useEffect(() => {
         // @ts-ignore
-        ProfileAPI.grabInformationOf(username.toString())
+        ProfileAPI.getDataOf(username.toString())
             .then(data => {
                 setUserData(
                     JSON.stringify(data.data)
